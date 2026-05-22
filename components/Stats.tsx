@@ -23,39 +23,34 @@ const stats: StatItem[] = [
 
 export default function Stats() {
   return (
-    <div className="relative -mt-10 z-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
 
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      {stats.map((item) => {
+        const Icon = item.icon;
 
-          {stats.map((item) => {
-            const Icon = item.icon;
+        return (
+          <div
+            key={item.label}
+            className="rounded-2xl border border-gray-100 bg-white p-5 shadow-md transition hover:shadow-lg"
+          >
 
-            return (
-              <div
-                key={item.label}
-                className="bg-white rounded-2xl shadow-md border border-gray-100 p-5 hover:shadow-lg transition"
-              >
-                <Icon className="text-green-700 mb-2" size={22} />
+            <Icon
+              className="mb-3 text-green-700"
+              size={24}
+            />
 
-                <div className="text-xl font-bold text-gray-800">
-                  {item.value}
-                </div>
+            <div className="text-2xl font-black text-gray-800">
+              {item.value}
+            </div>
 
-                <div className="text-sm text-gray-500 mt-1">
-                  {item.label}
-                </div>
+            <div className="mt-1 text-sm text-gray-500">
+              {item.label}
+            </div>
 
-                <div className="text-xs text-green-700 mt-2 font-medium cursor-pointer">
-                  Lihat detail →
-                </div>
-              </div>
-            );
-          })}
+          </div>
+        );
+      })}
 
-        </div>
-
-      </div>
     </div>
   );
 }

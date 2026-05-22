@@ -5,22 +5,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import {
-  Search,
-  Bell,
-  Users,
-  Building2,
   GraduationCap,
-  Handshake,
 } from "lucide-react";
 
 import NewsSection from "@/components/NewsSection";
 import AgendaSection from "@/components/AgendaSection";
 import LayananSection from "@/components/LayananSection";
 import Footer from "@/components/Footer";
-import KursWidget from "@/components/KursWidget";
-import WisataHalal from "@/components/WisataHalal";
-import IndustriHalal from "@/components/IndustriHalal";
-import SahamSyariah from "@/components/SahamSyariah";
+import Stats from "@/components/Stats";
 
 
 /* ================= COUNTER ================= */
@@ -54,34 +46,6 @@ function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
 }
 
 /* ================= DATA ================= */
-
-const stats = [
-  {
-    number: 4892,
-    label: "Total Anggota",
-    icon: Users,
-  },
-  {
-    number: 312,
-    label: "Pengurus Aktif",
-    icon: Users,
-  },
-  {
-    number: 28,
-    label: "Program Akademi",
-    icon: GraduationCap,
-  },
-  {
-    number: 27,
-    label: "Kota/Kabupaten",
-    icon: Building2,
-  },
-  {
-    number: 86,
-    label: "Mitra Strategis",
-    icon: Handshake,
-  },
-];
 
 const programs = [
   {
@@ -167,30 +131,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= STATS ================= */}
-      <div className="relative z-20 mt-6 lg:-mt-6">
-        <div className="mx-auto grid max-w-7xl gap-4 rounded-[28px] bg-white p-6 shadow-xl md:grid-cols-3 lg:grid-cols-5">
-
-          {stats.map(({ number, label, icon: Icon }) => (
-            <div
-              key={label}
-              className="flex items-start gap-3 rounded-2xl p-3 transition hover:bg-slate-50"
-            >
-              <div className="rounded-xl bg-green-100 p-3 text-green-700">
-                <Icon className="h-5 w-5" />
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-black text-slate-900">
-                  <Counter end={number} />
-                </h3>
-                <p className="text-xs text-slate-500">{label}</p>
-              </div>
-            </div>
-          ))}
-
-        </div>
-      </div>
+   {/* ================= STATS ================= */}
+<section className="relative z-20 -mt-10">
+  <div className="mx-auto max-w-7xl px-4">
+    <Stats />
+  </div>
+</section>
 
       {/* ================= CONTENT ================= */}
       <section className="mx-auto max-w-7xl px-6 py-14">
@@ -240,32 +186,7 @@ export default function Home() {
       {/* ================= LAYANAN ================= */}
       <LayananSection />
 
-    {/* ================= INFO GRAFIK ================= */}
-<section className="mx-auto text-center max-w-7xl px-6 py-0">
-
-         <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-bold uppercase  tracking-wider text-green-700">
-           INFO GRAFIK
-          </span>
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-      
-      <div className="bg-white shadow rounded-xl p-4">
-        <KursWidget />
-      </div>
-
-      <div className="bg-white shadow rounded-xl p-4">
-        <WisataHalal />
-      </div>
-
-      <div className="bg-white shadow rounded-xl p-4">
-        <IndustriHalal />
-      </div>
-
-      <div className="bg-white shadow rounded-xl p-4">
-         <SahamSyariah />
-      </div>
-
-    </div>
-</section>
+    
 
       {/* ================= NEWSLETTER ================= */}
 <section className="pb-14">

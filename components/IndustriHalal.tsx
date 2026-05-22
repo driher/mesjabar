@@ -6,67 +6,74 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
-  Legend,
+  CartesianGrid,
 } from "recharts";
 
 const data = [
-  { year: 2020, index: 60, umkm: 150, investasi: 40 },
-  { year: 2021, index: 64, umkm: 165, investasi: 48 },
-  { year: 2022, index: 70, umkm: 185, investasi: 60 },
-  { year: 2023, index: 76, umkm: 210, investasi: 78 },
-  { year: 2024, index: 82, umkm: 240, investasi: 95 },
-  { year: 2025, index: 88, umkm: 275, investasi: 120 },
+  { year: "2020", index: 60, umkm: 150, investasi: 40 },
+  { year: "2021", index: 64, umkm: 165, investasi: 48 },
+  { year: "2022", index: 70, umkm: 185, investasi: 60 },
+  { year: "2023", index: 76, umkm: 210, investasi: 78 },
+  { year: "2024", index: 82, umkm: 240, investasi: 95 },
+  { year: "2025", index: 88, umkm: 275, investasi: 120 },
 ];
 
-export default function IndustriHalalJabarChart() {
+export default function IndustriHalal() {
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-md w-full h-[520px] flex flex-col">
+    <div className="w-full">
 
-      {/* TITLE */}
-      <h2 className="text-lg font-bold mb-3">
-        Grafik Industri Halal Jawa Barat
+      <h2 className="mb-4 text-sm font-bold text-slate-800">
+        Industri Halal Jabar
       </h2>
 
-      {/* CHART */}
-      <div className="flex-1 min-h-[300px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
+      <div className="overflow-x-auto">
 
-            <Line
-              type="monotone"
-              dataKey="index"
-              stroke="#16a34a"
-              name="Halal Industry Index"
-            />
+        <LineChart
+          width={320}
+          height={260}
+          data={data}
+        >
 
-            <Line
-              type="monotone"
-              dataKey="umkm"
-              stroke="#2563eb"
-              name="UMKM Halal (ribu unit)"
-            />
+          <CartesianGrid strokeDasharray="3 3" />
 
-            <Line
-              type="monotone"
-              dataKey="investasi"
-              stroke="#f59e0b"
-              name="Investasi (triliun)"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+          <XAxis
+            dataKey="year"
+            tick={{ fontSize: 10 }}
+          />
+
+          <YAxis tick={{ fontSize: 10 }} />
+
+          <Tooltip />
+
+          <Line
+            type="monotone"
+            dataKey="index"
+            stroke="#16a34a"
+            strokeWidth={3}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="umkm"
+            stroke="#2563eb"
+            strokeWidth={3}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="investasi"
+            stroke="#f59e0b"
+            strokeWidth={3}
+          />
+
+        </LineChart>
+
       </div>
 
-      {/* SOURCE */}
-      <p className="text-[10px] text-gray-400 mt-2 leading-snug">
-        Sumber: Kementerian Perindustrian RI, Kementerian Koperasi & UKM, Badan Pusat Statistik (BPS), serta laporan ekonomi syariah Indonesia.
+      <p className="mt-3 text-[10px] leading-relaxed text-slate-400">
+        Sumber: KNEKS, BPS, dan Kementerian Perindustrian
       </p>
 
     </div>
   );
 }
-

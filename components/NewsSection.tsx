@@ -1,98 +1,101 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-type Post = {
-  title: string;
-  date: string;
-  image: string;
-  slug: string;
-};
+const API =
+  "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=3";
 
-export default function NewsSection() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
+async function getPosts() {
+  try {
+    const res = await fetch(API, {
+      next: { revalidate: 60 },
+    });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(
-          "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=3"
-        );
+    if (!res.ok) {
+      return [];
+    }
 
-        const data = await res.json();
+    return res.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
-        const formatted = data.map((item: any) => ({
-          title: item.title?.rendered || "",
-          date: new Date(item.date).toLocaleDateString("id-ID"),
-          image:
-            item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-            "/hero.jpg",
-          slug: item.slug,
-        }));
-
-        setPosts(formatted);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+export default async function NewsSection() {
+  const posts = await getPosts();
 
   return (
     <section>
+      {/* HEADER */}
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="text-2xl font-black text-slate-900">
+          Berita MES
+        </h2>
 
-      <h2 className="text-xl font-bold mb-4">
-        Berita MES
-      </h2>
-
-      {loading && <p className="text-xs text-gray-500">Loading...</p>}
-
-      <div className="space-y-3">
-
-        {posts.map((item) => (
-
+        
           <Link
-            key={item.slug}
-            href={`/news/${item.slug}`}
-            className="flex gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition"
-          >
-
-            {/* IMAGE */}
-            <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg">
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* CONTENT */}
-            <div className="flex-1 min-w-0 flex flex-col justify-between">
-
-              <h3
-                className="text-[13px] font-semibold text-gray-800 leading-snug break-words line-clamp-4"
-                dangerouslySetInnerHTML={{ __html: item.title }}
-              />
-
-              <p className="text-[11px] text-gray-500 mt-1">
-                {item.date}
-              </p>
-
-            </div>
-
-          </Link>
-
-        ))}
-
+  href="/news"
+  className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm transition hover:shadow-md"
+>
+  Semua Berita
+</Link>
+      
       </div>
 
+      {/* EMPTY */}
+      {posts.length === 0 && (
+        <div className="rounded-2xl bg-white p-5 text-sm text-slate-500 shadow-sm">
+          Berita tidak tersedia
+        </div>
+      )}
+
+      {/* LIST */}
+      <div className="space-y-4">
+        {posts.map((item: any) => {
+          const image =
+            item?._embedded?.["wp:featuredmedia"]?.[0]
+              ?.source_url || "/hero.jpg";
+
+          return (
+            <Link
+              href={`/news/${item.slug}`}
+              key={item.id}
+              className="group flex gap-4 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            >
+              {/* IMAGE */}
+              <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl">
+                <Image
+                  src={image}
+                  alt={item.title.rendered}
+                  fill
+                  className="object-cover transition duration-500 group-hover:scale-110"
+                />
+              </div>
+
+              {/* CONTENT */}
+              <div className="flex flex-1 flex-col justify-between">
+                <h3
+                  className="line-clamp-4 text-[13px] font-bold leading-snug text-slate-800 transition group-hover:text-green-700"
+                  dangerouslySetInnerHTML={{
+                    __html: item.title.rendered,
+                  }}
+                />
+
+                <p className="mt-2 text-xs text-slate-500">
+                  {new Date(item.date).toLocaleDateString(
+                    "id-ID",
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }
+                  )}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </section>
   );
 }
