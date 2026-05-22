@@ -9,13 +9,13 @@ export default function Navbar() {
 
   const menus = [
     { label: "Beranda", href: "/" },
-    { label: "Profil MES", href: "/profil-mes" },
+    { label: "Profil MES", href: "/news/profil-mes" },
     { label: "Database Pakar", href: "/pakar" },
     { label: "Akademi", href: "/akademi" },
     { label: "Pendamping Halal", href: "/pendamping-halal" },
     { label: "Unit Usaha", href: "/unit-usaha" },
     { label: "Agenda", href: "/agenda" },
-    { label: "Berita", href: "/berita" },
+    { label: "Berita", href: "/news" },
   ];
 
   return (

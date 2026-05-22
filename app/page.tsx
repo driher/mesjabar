@@ -268,38 +268,46 @@ export default function Home() {
 </section>
 
       {/* ================= NEWSLETTER ================= */}
-      <section className="pb-14">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="rounded-3xl bg-gradient-to-r from-green-900 via-green-800 to-emerald-700 px-8 py-7 shadow-xl">
+<section className="pb-14">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <div className="rounded-3xl bg-gradient-to-r from-green-900 via-green-800 to-emerald-700 px-5 py-6 sm:px-8 sm:py-7 shadow-xl">
 
-              <div>
-                <h3 className="text-xl font-bold text-white">
-                  Dapatkan informasi terbaru dari MES Jawa Barat
-                </h3>
-                <p className="mt-2 text-sm text-green-100">
-                  Berlangganan newsletter untuk update program terbaru
-                </p>
-              </div>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-              <div className="flex w-full max-w-xl gap-3">
-                <input
-                  type="email"
-                  placeholder="Masukkan email Anda"
-                  className="h-14 flex-1 rounded-xl border-0 bg-white px-5 text-sm outline-none"
-                />
+        {/* TEXT */}
+        <div className="max-w-xl">
 
-                <button className="rounded-xl bg-yellow-500 px-6 text-sm font-semibold text-white transition hover:bg-yellow-400">
-                  Berlangganan
-                </button>
-              </div>
+          <h3 className="text-lg font-bold leading-snug text-white sm:text-xl">
+            Dapatkan informasi terbaru dari MES Jawa Barat
+          </h3>
 
-            </div>
+          <p className="mt-2 text-sm leading-relaxed text-green-100">
+            Berlangganan newsletter untuk update program terbaru
+          </p>
 
-          </div>
         </div>
-      </section>
+
+       {/* FORM */}
+<div className="flex w-full flex-col gap-3 sm:flex-row lg:max-w-xl">
+
+  <input
+    type="email"
+    placeholder="Masukkan email Anda"
+    className="h-14 w-full rounded-2xl border border-white/20 bg-white px-5 text-sm shadow-sm outline-none placeholder:text-gray-400 sm:h-14"
+  />
+
+  <button className="h-14 rounded-2xl bg-yellow-500 px-6 text-sm font-semibold text-white transition hover:bg-yellow-400 whitespace-nowrap">
+    Berlangganan
+  </button>
+
+</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
 {/* ================= MITRA ================= */}
 <section className="pb-14">
