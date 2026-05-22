@@ -287,6 +287,85 @@ export default function Home() {
         </div>
       </section>
 
+{/* ================= MITRA ================= */}
+<section className="pb-14">
+
+  <div className="max-w-7xl mx-auto px-6">
+
+    <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+
+      <div className="text-center">
+
+        <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-green-700">
+          Mitra Strategis
+        </span>
+
+        <h2 className="mt-4 text-3xl font-black text-slate-900">
+          Kolaborasi Bersama Mitra
+        </h2>
+
+        <p className="mt-3 text-sm text-slate-500">
+          Bersinergi membangun ekosistem ekonomi syariah yang kuat dan berkelanjutan.
+        </p>
+
+      </div>
+
+      {/* LOGO */}
+      <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
+
+        {[
+          {
+            name: "Bank Indonesia",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/BI_Logo.png/1920px-BI_Logo.png",
+          },
+          {
+            name: "OJK",
+            logo: "https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png",
+          },
+          {
+            name: "BJB Syariah",
+            logo: "https://www.icdx.co.id/cms/img/9d20f3ec-f97d-40c0-a237-c9a450e280dd/bjb-syariah.png",
+          },
+          {
+            name: "Rumah Zakat",
+            logo: "https://www.rumahzakat.org/wp-content/uploads/2023/10/logo-rumah-zakat-1.png",
+          },
+          {
+            name: "UIN SGD",
+            logo: "https://uinsgd.ac.id/wp-content/uploads/2023/03/Logo-uinsgd_official.png",
+          },
+	  {
+            name: "UPI",
+            logo: "https://images.seeklogo.com/logo-png/33/2/upi-universitas-pendidikan-indonesia-logo-png_seeklogo-332580.png",
+	    },
+          {
+            name: "BUMN",
+            logo: "https://png.pngtree.com/png-clipart/20230627/original/pngtree-soya-logo-for-indonesia-horizontally-vector-png-image_9229872.png",
+          },
+        ].map((item) => (
+
+          <div
+            key={item.name}
+            className="flex h-28 items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 p-6 transition hover:-translate-y-1 hover:bg-white hover:shadow-md"
+          >
+
+            <img
+              src={item.logo}
+              alt={item.name}
+              className="max-h-14 w-auto object-contain grayscale transition hover:grayscale-0"
+            />
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 <Footer />
     </main>
   );
