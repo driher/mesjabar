@@ -19,7 +19,7 @@ export default function NewsSection() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=5"
+          "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=3"
         );
 
         const data = await res.json();
@@ -47,19 +47,24 @@ export default function NewsSection() {
   return (
     <section>
 
-      <h2 className="text-2xl font-bold mb-4">Berita MES</h2>
+      <h2 className="text-xl font-bold mb-4">
+        Berita MES
+      </h2>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className="text-xs text-gray-500">Loading...</p>}
 
-      <div className="space-y-4">
+      <div className="space-y-3">
+
         {posts.map((item) => (
+
           <Link
             key={item.slug}
             href={`/news/${item.slug}`}
-            className="flex gap-4 p-3 bg-white rounded-xl shadow-sm"
+            className="flex gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition"
           >
 
-            <div className="relative h-20 w-28 overflow-hidden rounded-lg">
+            {/* IMAGE */}
+            <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -68,18 +73,24 @@ export default function NewsSection() {
               />
             </div>
 
-            <div>
+            {/* CONTENT */}
+            <div className="flex-1 min-w-0 flex flex-col justify-between">
+
               <h3
-                className="font-semibold text-sm line-clamp-2"
+                className="text-[13px] font-semibold text-gray-800 leading-snug break-words line-clamp-4"
                 dangerouslySetInnerHTML={{ __html: item.title }}
               />
-              <p className="text-xs text-gray-500 mt-1">
+
+              <p className="text-[11px] text-gray-500 mt-1">
                 {item.date}
               </p>
+
             </div>
 
           </Link>
+
         ))}
+
       </div>
 
     </section>
