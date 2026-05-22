@@ -1,0 +1,97 @@
+import Link from "next/link";
+
+interface PakarCardProps {
+  item: any;
+}
+
+export default function PakarCard({
+  item,
+}: PakarCardProps) {
+
+  /**
+   * DATA
+   */
+  const nama =
+    item?.title?.rendered ||
+    "Tanpa Nama";
+
+  const slug =
+    item?.slug || item?.id;
+
+  /**
+   * FOTO
+   * Ambil featured image WordPress jika ada
+   */
+  const featuredImage =
+    item?._embedded?.["wp:featuredmedia"]?.[0]
+      ?.source_url;
+
+  /**
+   * FALLBACK AVATAR
+   */
+  const avatar =
+    "https://ui-avatars.com/api/?name=" +
+    encodeURIComponent(nama) +
+    "&background=15803d&color=ffffff&size=300";
+
+  const foto = featuredImage || avatar;
+
+  return (
+    <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300">
+
+      {/* HEADER */}
+      <div className="h-28 bg-gradient-to-r from-green-800 via-green-700 to-emerald-500 relative">
+
+        <div className="absolute inset-0 bg-black/10"></div>
+
+      </div>
+
+      {/* CONTENT */}
+      <div className="px-6 pb-6 relative">
+
+        {/* FOTO */}
+        <div className="flex justify-center">
+
+          <img
+            src={foto}
+            alt={nama}
+            className="w-28 h-28 rounded-full border-[6px] border-white object-cover shadow-lg absolute -top-14 bg-white"
+          />
+
+        </div>
+
+        {/* INFO */}
+        <div className="pt-20 text-center">
+
+          <span className="inline-flex items-center rounded-full bg-green-100 px-4 py-1 text-xs font-medium text-green-700">
+            Pakar MES
+          </span>
+
+          <h3
+            className="text-xl font-bold mt-4 text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: nama,
+            }}
+          />
+
+          <p className="text-sm text-gray-500 mt-3 leading-6">
+            Direktori pakar, profesional,
+            akademisi, dan praktisi
+            MES Jawa Barat.
+          </p>
+
+          {/* BUTTON */}
+          <Link
+            href={`/pakar/${slug}`}
+            className="mt-6 inline-flex items-center justify-center w-full rounded-2xl bg-green-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-green-800"
+          >
+            Lihat Profil
+          </Link>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}

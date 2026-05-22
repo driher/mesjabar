@@ -56,42 +56,84 @@ function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
 /* ================= DATA ================= */
 
 const menus = [
-  "Beranda",
-  "Profil MES",
-  "Pengurus",
-  "Database Anggota",
-  "Agenda",
-  "Berita",
+  {
+    label: "Beranda",
+    href: "/",
+  },
+  {
+    label: "Profil MES",
+    href: "/profil-mes",
+  },
+  {
+    label: "Database Pakar",
+    href: "/pakar",
+  },
+  {
+    label: "Akademi",
+    href: "/akademi",
+  },
+  {
+    label: "Agenda",
+    href: "/agenda",
+  },
+  {
+    label: "Berita",
+    href: "/news",
+  },
 ];
 
 const stats = [
-  { number: 4892, label: "Total Anggota", icon: Users },
-  { number: 312, label: "Pengurus Aktif", icon: Users },
-  { number: 28, label: "Program Akademi", icon: GraduationCap },
-  { number: 27, label: "Kota/Kabupaten", icon: Building2 },
-  { number: 86, label: "Mitra Strategis", icon: Handshake },
+  {
+    number: 4892,
+    label: "Total Anggota",
+    icon: Users,
+  },
+  {
+    number: 312,
+    label: "Pengurus Aktif",
+    icon: Users,
+  },
+  {
+    number: 28,
+    label: "Program Akademi",
+    icon: GraduationCap,
+  },
+  {
+    number: 27,
+    label: "Kota/Kabupaten",
+    icon: Building2,
+  },
+  {
+    number: 86,
+    label: "Mitra Strategis",
+    icon: Handshake,
+  },
 ];
 
 const programs = [
   {
     title: "Akademi Ekonomi Syariah",
     desc: "Pengembangan SDM unggul di bidang ekonomi syariah",
-    color: "bg-green-100 text-green-700",
+    color:
+      "bg-green-100 text-green-700",
   },
   {
     title: "Pendamping Halal",
     desc: "Pendampingan sertifikasi halal untuk UMKM dan industri",
-    color: "bg-yellow-100 text-yellow-700",
+    color:
+      "bg-yellow-100 text-yellow-700",
   },
   {
     title: "Koperasi Syariah",
     desc: "Koperasi modern berbasis syariah",
-    color: "bg-blue-100 text-blue-700",
+    color:
+      "bg-blue-100 text-blue-700",
   },
   {
     title: "Donasi & ZISWAF",
     desc: "Pemberdayaan ekonomi umat",
-    color: "bg-violet-100 text-violet-700",
+    color:
+      "bg-violet-100 text-violet-700",
   },
 ];
 
@@ -116,17 +158,21 @@ export default function Home() {
           />
 
           {/* MENU */}
-          <nav className="hidden items-center gap-7 pt-5 text-sm font-semibold text-green-900 lg:flex">
-            {menus.map((item) => (
-              <Link
-                key={item}
-                href="#"
-                className="transition hover:text-yellow-600"
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
+        <nav className="hidden items-center gap-7 pt-5 text-sm font-semibold text-green-900 lg:flex">
+
+  {menus.map((item) => (
+
+    <Link
+      key={item.href}
+      href={item.href}
+      className="transition hover:text-yellow-600"
+    >
+      {item.label}
+    </Link>
+
+  ))}
+
+</nav>
 
           {/* ICON */}
           <div className="flex items-center gap-4 pt-5 text-green-900">
