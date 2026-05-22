@@ -16,7 +16,7 @@ import {
 import NewsSection from "@/components/NewsSection";
 import AgendaSection from "@/components/AgendaSection";
 import LayananSection from "@/components/LayananSection";
-import Footer from "@/components/Footer";
+import LayananSection from "@/components/Footer";
 
 /* ================= COUNTER ================= */
 
