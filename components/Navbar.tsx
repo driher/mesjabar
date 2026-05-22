@@ -88,31 +88,32 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
     {open && (
-  <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-white z-[9998] overflow-y-auto">
-    <div className="px-4 py-4 flex flex-col gap-2 text-sm font-medium">
+  <div className="lg:hidden fixed inset-0 top-16 z-[99999] bg-white overflow-y-auto">
+    
+    <div className="flex flex-col gap-2 px-4 py-4 text-sm font-medium">
 
       {menus.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           onClick={() => setOpen(false)}
-          className="block w-full py-3 px-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-green-700 transition"
+          className="block w-full rounded-lg px-3 py-3 text-gray-700 transition hover:bg-gray-100 hover:text-green-700"
         >
           {item.label}
         </Link>
       ))}
 
-      <div className="flex gap-3 pt-4 border-t mt-3">
+      <div className="mt-3 flex gap-3 border-t pt-4">
 
-        <button className="p-2 hover:bg-gray-100 rounded-full">
+        <button className="rounded-full p-2 hover:bg-gray-100">
           <Search size={18} />
         </button>
 
-        <button className="p-2 hover:bg-gray-100 rounded-full">
+        <button className="rounded-full p-2 hover:bg-gray-100">
           <Bell size={18} />
         </button>
 
-        <button className="bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold w-full">
+        <button className="w-full rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white">
           Login / Daftar
         </button>
 
@@ -120,8 +121,7 @@ export default function Navbar() {
 
     </div>
   </div>
-
-      )}
+)}
     </header>
   );
 }
