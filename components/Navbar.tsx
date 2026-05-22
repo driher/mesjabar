@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <img
             src="/logo-mes-jabar.png"
-            className="h-35 w-auto"
+            className="h-25 w-auto"
             alt="MES Jabar"
           />
         </div>

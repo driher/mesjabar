@@ -1,15 +1,20 @@
+// app/page.tsx
+
 import Image from "next/image";
 import Link from "next/link";
 
 const API = "https://mada.akarmusic.com/wp-json/wp/v2";
 
 /* =========================
-   FETCH POSTS (STABIL)
+   FETCH POSTS
 ========================= */
 async function getPosts() {
-  const res = await fetch(`${API}/posts?_embed&per_page=10`, {
-    next: { revalidate: 60 }, // 🔥 FIX: stabilkan SSR/CSR
-  });
+  const res = await fetch(
+    `${API}/posts?_embed&per_page=10`,
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Gagal mengambil berita");
@@ -27,7 +32,9 @@ function formatPost(item: any) {
     slug: item.slug,
     title: item.title?.rendered || "",
     excerpt:
-      item.excerpt?.rendered?.replace(/<[^>]+>/g, "")?.slice(0, 120) || "",
+      item.excerpt?.rendered
+        ?.replace(/<[^>]+>/g, "")
+        ?.slice(0, 120) || "",
     image:
       item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
       "/hero.jpg",
@@ -37,7 +44,8 @@ function formatPost(item: any) {
       year: "numeric",
     }),
     category:
-      item._embedded?.["wp:term"]?.[0]?.[0]?.name || "BERITA",
+      item._embedded?.["wp:term"]?.[0]?.[0]?.name ||
+      "BERITA",
   };
 }
 
@@ -46,6 +54,7 @@ function formatPost(item: any) {
 ========================= */
 export default async function HomePage() {
   const rawPosts = await getPosts();
+
   const posts = rawPosts.map(formatPost);
 
   const heroNews = posts[0];
@@ -55,142 +64,176 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
+
       <div className="mx-auto max-w-7xl px-4 py-6">
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
-          {/* ================= LEFT ================= */}
+          {/* ================= LEFT CONTENT ================= */}
           <section className="lg:col-span-8">
 
-            {/* HERO FIXED */}
+            {/* HERO */}
             {heroNews && (
               <Link
                 href={`/news/${heroNews.slug}`}
-                className="relative block overflow-hidden rounded-2xl h-[260px] sm:h-[340px] lg:h-[420px]"
+                className="relative block overflow-hidden rounded-2xl"
               >
+
                 <Image
                   src={heroNews.image}
                   alt={heroNews.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 66vw"
-                  className="object-cover"
+                  width={1200}
+                  height={700}
+                  className="h-[260px] w-full object-cover sm:h-[340px] lg:h-[420px]"
                   priority
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
                 <div className="absolute bottom-0 p-4 sm:p-6">
-                  <span className="rounded bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white">
+
+                  <span className="rounded bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white sm:text-xs">
                     {heroNews.category}
                   </span>
 
                   <h1
-                    className="mt-3 text-xl font-bold text-white sm:text-2xl lg:text-3xl"
-                    dangerouslySetInnerHTML={{ __html: heroNews.title }}
+                    className="mt-3 max-w-3xl text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl"
+                    dangerouslySetInnerHTML={{
+                      __html: heroNews.title,
+                    }}
                   />
 
                   <p className="mt-2 text-xs text-gray-200">
                     {heroNews.date}
                   </p>
+
                 </div>
+
               </Link>
             )}
 
-            {/* MINI NEWS FIXED */}
-            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-5 items-stretch">
+            {/* MINI NEWS */}
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-5">
+
               {miniNews.map((item: any) => (
+
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                  className="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
                 >
+
                   <Image
                     src={item.image}
                     alt={item.title}
                     width={400}
                     height={250}
-                    sizes="20vw"
                     className="h-24 w-full object-cover"
                   />
 
                   <div className="p-2">
+
                     <h3
-                      className="text-[12px] font-semibold line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: item.title }}
+                      className="line-clamp-4 text-[12px] font-semibold leading-snug text-gray-800"
+                      dangerouslySetInnerHTML={{
+                        __html: item.title,
+                      }}
                     />
+
                   </div>
+
                 </Link>
+
               ))}
+
             </div>
 
-            {/* GRID NEWS FIXED */}
-            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3 items-stretch">
+            {/* GRID NEWS */}
+            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+
               {latestNews.map((item: any) => (
+
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="h-full overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+                  className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
                 >
+
                   <Image
                     src={item.image}
                     alt={item.title}
                     width={600}
                     height={350}
-                    sizes="33vw"
                     className="h-44 w-full object-cover"
                   />
 
                   <div className="p-4">
+
                     <span className="text-[11px] font-semibold text-orange-500">
                       {item.category}
                     </span>
 
                     <h3
-                      className="mt-2 text-sm font-bold line-clamp-3"
-                      dangerouslySetInnerHTML={{ __html: item.title }}
+                      className="mt-2 line-clamp-3 text-sm font-bold leading-snug"
+                      dangerouslySetInnerHTML={{
+                        __html: item.title,
+                      }}
                     />
+
                   </div>
+
                 </Link>
+
               ))}
+
             </div>
 
-            {/* ARTICLE LIST FIXED */}
+            {/* ARTICLE LIST */}
             <div className="mt-10 space-y-5">
+
               {articles.map((item: any) => (
+
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="flex flex-col sm:flex-row gap-4 rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-md h-full"
+                  className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row"
                 >
+
                   <Image
                     src={item.image}
                     alt={item.title}
                     width={300}
                     height={180}
-                    sizes="(max-width:768px) 100vw, 300px"
-                    className="h-28 w-44 rounded-xl object-cover flex-shrink-0"
+                    className="h-48 w-full rounded-xl object-cover sm:h-28 sm:w-44"
                   />
 
                   <div className="flex-1">
+
                     <span className="text-[11px] font-semibold text-orange-500">
                       {item.category}
                     </span>
 
                     <h2
-                      className="mt-1 text-base font-bold"
-                      dangerouslySetInnerHTML={{ __html: item.title }}
+                      className="mt-1 text-base font-bold leading-snug text-gray-900 sm:text-lg"
+                      dangerouslySetInnerHTML={{
+                        __html: item.title,
+                      }}
                     />
 
-                    <p className="mt-2 text-sm text-gray-600">
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">
                       {item.excerpt}
                     </p>
 
                     <p className="mt-3 text-xs text-gray-400">
                       {item.date}
                     </p>
+
                   </div>
+
                 </Link>
+
               ))}
+
             </div>
 
           </section>
@@ -198,39 +241,99 @@ export default async function HomePage() {
           {/* ================= SIDEBAR ================= */}
           <aside className="space-y-6 lg:col-span-4">
 
+            {/* TRENDING */}
             <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <h3 className="mb-4 text-lg font-bold">Trending</h3>
+
+              <h3 className="mb-4 text-lg font-bold">
+                Trending
+              </h3>
 
               <div className="space-y-4">
+
                 {posts.slice(0, 5).map((item: any, i: number) => (
+
                   <Link
                     key={item.id}
                     href={`/news/${item.slug}`}
                     className="flex items-start gap-4 border-b pb-4 last:border-none"
                   >
+
                     <span className="text-2xl font-bold text-gray-300">
                       0{i + 1}
                     </span>
 
                     <div>
+
                       <p
-                        className="text-sm font-semibold line-clamp-3"
-                        dangerouslySetInnerHTML={{ __html: item.title }}
+                        className="line-clamp-3 text-sm font-semibold leading-snug text-gray-800"
+                        dangerouslySetInnerHTML={{
+                          __html: item.title,
+                        }}
                       />
 
                       <p className="mt-1 text-[11px] text-gray-400">
                         {item.date}
                       </p>
+
                     </div>
+
                   </Link>
+
                 ))}
+
               </div>
+
             </div>
+
+            {/* FEATURE VIDEO STYLE */}
+            {posts[2] && (
+              <Link
+                href={`/news/${posts[2].slug}`}
+                className="overflow-hidden rounded-2xl bg-white shadow-sm"
+              >
+
+                <div className="relative">
+
+                  <Image
+                    src={posts[2].image}
+                    alt={posts[2].title}
+                    width={800}
+                    height={400}
+                    className="h-56 w-full object-cover"
+                  />
+
+                  <div className="absolute inset-0 flex items-center justify-center">
+
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-600">
+
+                      <div className="ml-1 h-0 w-0 border-y-8 border-y-transparent border-l-[14px] border-l-white" />
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div className="p-4">
+
+                  <h3
+                    className="line-clamp-3 font-bold leading-snug"
+                    dangerouslySetInnerHTML={{
+                      __html: posts[2].title,
+                    }}
+                  />
+
+                </div>
+
+              </Link>
+            )}
 
           </aside>
 
         </div>
+
       </div>
+
     </main>
   );
 }
