@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const API =
-  "https://mada.akarmusic.com/wp-json/wp/v2/agenda?per_page=3";
+  "https://mada.akarmusic.com/wp-json/wp/v2/agenda?per_page=3&_fields=id,slug,title,acf";
 
 async function getAgenda() {
   try {
@@ -9,13 +9,13 @@ async function getAgenda() {
       next: { revalidate: 60 },
     });
 
-    if (!res.ok) {
-      return [];
-    }
+    if (!res.ok) return [];
 
-    return res.json();
+    const data = await res.json();
+
+    return Array.isArray(data) ? data : [];
   } catch (error) {
-    console.error(error);
+    console.error("Agenda error:", error);
     return [];
   }
 }
@@ -24,18 +24,8 @@ export default async function AgendaSection() {
   const agenda = await getAgenda();
 
   const months = [
-    "JAN",
-    "FEB",
-    "MAR",
-    "APR",
-    "MEI",
-    "JUN",
-    "JUL",
-    "AGU",
-    "SEP",
-    "OKT",
-    "NOV",
-    "DES",
+    "JAN","FEB","MAR","APR","MEI","JUN",
+    "JUL","AGU","SEP","OKT","NOV","DES",
   ];
 
   return (
@@ -46,9 +36,12 @@ export default async function AgendaSection() {
           Agenda
         </h2>
 
-        <button className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm">
+        <Link
+          href="/agenda"
+          className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm hover:bg-gray-50"
+        >
           Semua Agenda
-        </button>
+        </Link>
       </div>
 
       {/* EMPTY */}
@@ -66,24 +59,26 @@ export default async function AgendaSection() {
           let day = "--";
           let month = "---";
 
-          // FORMAT: 31/05/2026
-          if (tanggal.includes("/")) {
+          if (typeof tanggal === "string" && tanggal.includes("/")) {
             const split = tanggal.split("/");
 
-            day = split[0];
+            day = split[0] || "--";
 
             const monthIndex = Number(split[1]) - 1;
 
             month = months[monthIndex] || "---";
           }
 
+          const slug = item?.slug || "#";
+
           return (
             <Link
-              href={`/agenda/${item.slug}`}
-              key={item.id}
+              href={slug !== "#" ? `/agenda/${slug}` : "/agenda"}
+              key={item?.id || Math.random()}
               className="group block overflow-hidden rounded-2xl border border-green-100 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
               <div className="flex gap-4">
+
                 {/* DATE */}
                 <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-emerald-500 text-white">
                   <span className="text-2xl font-black leading-none">
@@ -97,15 +92,16 @@ export default async function AgendaSection() {
 
                 {/* CONTENT */}
                 <div className="flex-1">
+
                   <h3
                     className="text-sm font-bold leading-snug text-slate-800 transition group-hover:text-green-700"
                     dangerouslySetInnerHTML={{
-                      __html:
-                        item?.title?.rendered || "Tanpa Judul",
+                      __html: item?.title?.rendered || "Tanpa Judul",
                     }}
                   />
 
                   <div className="mt-3 space-y-1">
+
                     <p className="text-xs text-slate-500">
                       🕒 {item?.acf?.jam || "-"}
                     </p>
@@ -113,8 +109,11 @@ export default async function AgendaSection() {
                     <p className="text-xs text-slate-500">
                       📍 {item?.acf?.lokasi || "-"}
                     </p>
+
                   </div>
+
                 </div>
+
               </div>
             </Link>
           );

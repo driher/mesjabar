@@ -1,6 +1,7 @@
 // app/page.tsx
 
 import Image from "next/image";
+import Link from "next/link";
 
 
 const API = "https://mada.akarmusic.com/wp-json/wp/v2";

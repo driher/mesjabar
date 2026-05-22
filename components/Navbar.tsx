@@ -1,7 +1,9 @@
 "use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { Search, Bell, Menu, X } from "lucide-react";
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -17,7 +19,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <header className="sticky top-0 z-[9999] bg-white/80 backdrop-blur-md border-b border-gray-100">
 
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
 
@@ -25,7 +27,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <img
             src="/logo-mes-jabar.png"
-            className="h-30 w-auto"
+            className="h-35 w-auto"
             alt="MES Jabar"
           />
         </div>
@@ -72,21 +74,23 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="lg:hidden border-t bg-white">
-          <div className="px-4 py-3 flex flex-col gap-3 text-sm font-medium">
+        <div className="lg:hidden fixed inset-0 top-16 bg-white z-[9998] border-t overflow-y-auto">
+
+          <div className="px-4 py-4 flex flex-col gap-2 text-sm font-medium">
 
             {menus.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="text-gray-700 hover:text-green-700"
+                className="block w-full py-3 px-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-green-700 transition"
               >
                 {item.label}
               </Link>
             ))}
 
-            <div className="flex gap-3 pt-3 border-t mt-2">
+            <div className="flex gap-3 pt-4 border-t mt-3">
+
               <button className="p-2 hover:bg-gray-100 rounded-full">
                 <Search size={18} />
               </button>
@@ -98,6 +102,7 @@ export default function Navbar() {
               <button className="bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold w-full">
                 Login / Daftar
               </button>
+
             </div>
 
           </div>
