@@ -31,21 +31,26 @@ export default function Stats() {
         return (
           <div
             key={item.label}
-            className="rounded-2xl border border-gray-100 bg-white p-5 shadow-md transition hover:shadow-lg"
+            className="group relative rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
 
-            <Icon
-              className="mb-3 text-green-700"
-              size={24}
-            />
+            {/* ICON WRAPPER */}
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-700 group-hover:bg-green-100 transition">
+              <Icon size={20} />
+            </div>
 
+            {/* VALUE */}
             <div className="text-2xl font-black text-gray-800">
               {item.value}
             </div>
 
+            {/* LABEL */}
             <div className="mt-1 text-sm text-gray-500">
               {item.label}
             </div>
+
+            {/* subtle glow */}
+            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition bg-gradient-to-br from-green-50/40 to-transparent pointer-events-none" />
 
           </div>
         );

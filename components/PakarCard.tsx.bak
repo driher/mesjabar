@@ -1,26 +1,39 @@
 import Link from "next/link";
 
 interface PakarCardProps {
-  item: {
-    id: number;
-    slug?: string;
-    title?: { rendered?: string };
-    _embedded?: any;
-  };
+  item: any;
 }
 
-export default function PakarCard({ item }: PakarCardProps) {
-  const nama = item?.title?.rendered || "Tanpa Nama";
+export default function PakarCard({
+  item,
+}: PakarCardProps) {
 
-  const slug = item?.slug || item?.id;
+  /**
+   * NAMA
+   */
+  const nama =
+    item?.title?.rendered ||
+    "Tanpa Nama";
 
+  /**
+   * SLUG
+   */
+  const slug =
+    item?.slug || item?.id;
+
+  /**
+   * FOTO WORDPRESS
+   */
   const featuredImage =
-    item?._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null;
+    item?._embedded?.["wp:featuredmedia"]?.[0]
+      ?.source_url;
 
+  /**
+   * INISIAL
+   */
   const initials = nama
     .split(" ")
-    .filter(Boolean)
-    .map((word) => word?.[0] || "")
+    .map((word: string) => word[0])
     .join("")
     .substring(0, 2)
     .toUpperCase();
@@ -29,25 +42,30 @@ export default function PakarCard({ item }: PakarCardProps) {
     <div className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300">
 
       {/* HEADER */}
-      <div className="h-28 bg-gradient-to-r from-green-800 via-green-700 to-emerald-500" />
+      <div className="h-28 bg-gradient-to-r from-green-800 via-green-700 to-emerald-500"></div>
 
       {/* CONTENT */}
       <div className="px-6 pb-6 relative">
 
-        {/* AVATAR */}
+        {/* FOTO / AVATAR */}
         <div className="flex justify-center">
+
           {featuredImage ? (
+
             <img
               src={featuredImage}
               alt={nama}
               className="w-28 h-28 rounded-full border-[6px] border-white object-cover shadow-lg absolute -top-14 bg-white"
-              loading="lazy"
             />
+
           ) : (
-            <div className="w-28 h-28 rounded-full border-[6px] border-white bg-green-700 text-white flex items-center justify-center text-3xl font-bold shadow-lg absolute -top-14">
-              {initials || "?"}
+
+            <div className="w-28 h-28 rounded-full border-[6px] border-white bg-green-700 text-white flex items-center justify-center text-4xl font-bold shadow-lg absolute -top-14">
+              {initials}
             </div>
+
           )}
+
         </div>
 
         {/* INFO */}
@@ -57,12 +75,17 @@ export default function PakarCard({ item }: PakarCardProps) {
             Pakar MES
           </span>
 
-          <h3 className="text-xl font-bold mt-4 text-gray-900">
-            {nama}
-          </h3>
+          <h3
+            className="text-xl font-bold mt-4 text-gray-900"
+            dangerouslySetInnerHTML={{
+              __html: nama,
+            }}
+          />
 
           <p className="text-sm text-gray-500 mt-3 leading-6">
-            Direktori pakar, profesional, akademisi, dan praktisi MES Jawa Barat.
+            Direktori pakar, profesional,
+            akademisi, dan praktisi
+            MES Jawa Barat.
           </p>
 
           {/* BUTTON */}
@@ -76,6 +99,7 @@ export default function PakarCard({ item }: PakarCardProps) {
         </div>
 
       </div>
+
     </div>
   );
 }
