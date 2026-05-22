@@ -41,9 +41,9 @@ export default function Navbar() {
           <Image
             src="/logo-mes-jabar.png"
             alt="MES Jabar"
-            width={120}
-            height={60}
-            className="h-14 w-auto"
+            width={200}
+            height={100}
+            className="h-24 w-auto"
           />
         </div>
 
