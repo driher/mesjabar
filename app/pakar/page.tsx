@@ -9,35 +9,6 @@ import PakarCard from "../../components/PakarCard";
 import SearchBox from "../../components/SearchBox";
 import SidebarFilter from "../../components/SidebarFilter";
 
-/**
- * MENU
- */
-const menus = [
-  {
-    label: "Beranda",
-    href: "/",
-  },
-  {
-    label: "Profil MES",
-    href: "/profil-mes",
-  },
-  {
-    label: "Database Anggota",
-    href: "/database-anggota",
-  },
-  {
-    label: "Akademi",
-    href: "/akademi",
-  },
-  {
-    label: "Agenda",
-    href: "/agenda",
-  },
-  {
-    label: "Berita",
-    href: "/berita",
-  },
-];
 
 export default function PakarPage() {
 
@@ -97,55 +68,7 @@ export default function PakarPage() {
 
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
 
-      {/* HEADER */}
-      <header className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur-xl shadow-sm">
-
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
-
-          {/* LOGO */}
-          <div className="flex items-center">
-
-            <img
-              src="/logo-mes-jabar.png"
-              alt="MES Jabar"
-              className="h-16 w-auto"
-            />
-
-          </div>
-
-          {/* MENU */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-green-900">
-
-            {menus.map((item) => (
-
-              <Link
-                key={item.href}
-                href={item.href}
-                className="transition hover:text-green-600"
-              >
-                {item.label}
-              </Link>
-
-            ))}
-
-          </nav>
-
-          {/* RIGHT */}
-          <div className="flex items-center gap-4 text-green-900">
-
-            <Search className="h-5 w-5 cursor-pointer" />
-
-            <Bell className="h-5 w-5 cursor-pointer" />
-
-            <button className="rounded-xl bg-green-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-green-800">
-              Login
-            </button>
-
-          </div>
-
-        </div>
-
-      </header>
+     
 
       {/* HERO */}
       <section className="bg-gradient-to-r from-green-900 via-green-700 to-emerald-600 pt-40 pb-16">

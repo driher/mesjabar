@@ -55,33 +55,6 @@ function Counter({ end, duration = 2000 }: { end: number; duration?: number }) {
 
 /* ================= DATA ================= */
 
-const menus = [
-  {
-    label: "Beranda",
-    href: "/",
-  },
-  {
-    label: "Profil MES",
-    href: "/profil-mes",
-  },
-  {
-    label: "Database Pakar",
-    href: "/pakar",
-  },
-  {
-    label: "Akademi",
-    href: "/akademi",
-  },
-  {
-    label: "Agenda",
-    href: "/agenda",
-  },
-  {
-    label: "Berita",
-    href: "/news",
-  },
-];
-
 const stats = [
   {
     number: 4892,
@@ -144,44 +117,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#f5f7f6]">
 
       {/* ================= HEADER ================= */}
-      <header className="absolute left-0 top-0 z-30 w-full">
-        <div className="mx-auto flex max-w-7xl items-start justify-between px-6 pt-2">
-
-          {/* LOGO */}
-          <Image
-            src="/logo-mes-jabar.png"
-            alt="MES Jabar"
-            width={96}
-            height={96}
-            className="h-24 w-auto object-contain"
-            priority
-          />
-
-          {/* MENU */}
-        <nav className="hidden items-center gap-7 pt-5 text-sm font-semibold text-green-900 lg:flex">
-
-  {menus.map((item) => (
-
-    <Link
-      key={item.href}
-      href={item.href}
-      className="transition hover:text-yellow-600"
-    >
-      {item.label}
-    </Link>
-
-  ))}
-
-</nav>
-
-          {/* ICON */}
-          <div className="flex items-center gap-4 pt-5 text-green-900">
-            <Search className="h-5 w-5 cursor-pointer transition hover:text-yellow-600" />
-            <Bell className="h-5 w-5 cursor-pointer transition hover:text-yellow-600" />
-          </div>
-
-        </div>
-      </header>
+      
 
       {/* ================= HERO ================= */}
       <section className="relative">

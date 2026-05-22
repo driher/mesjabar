@@ -10,7 +10,7 @@ export default function Navbar() {
   const menus = [
     { label: "Beranda", href: "/" },
     { label: "Profil MES", href: "/profil-mes" },
-    { label: "Database Pakar", href: "/pakar" },
+    { label: "Database Anggota", href: "/database-anggota" },
     { label: "Akademi", href: "/akademi" },
     { label: "Pendamping Halal", href: "/pendamping-halal" },
     { label: "Unit Usaha", href: "/unit-usaha" },

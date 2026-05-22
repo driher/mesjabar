@@ -1,153 +1,56 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import PakarCard from "@/components/PakarCard";
-import SearchBox from "@/components/SearchBox";
-import SidebarFilter from "@/components/SidebarFilter";
-import { Search, Bell } from "lucide-react";
-
-"use client";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Search, Bell } from "lucide-react";
 
+import PakarCard from "../../components/PakarCard";
+import SearchBox from "../../components/SearchBox";
+import SidebarFilter from "../../components/SidebarFilter";
+
+/**
+ * MENU
+ */
 const menus = [
-  { label: "Beranda", href: "/" },
-  { label: "Profil MES", href: "/profil-mes" },
-  { label: "Database Anggota", href: "/database-anggota" },
-  { label: "Akademi", href: "/akademi" },
-  { label: "Agenda", href: "/agenda" },
-  { label: "Berita", href: "/berita" },
+  {
+    label: "Beranda",
+    href: "/",
+  },
+  {
+    label: "Profil MES",
+    href: "/profil-mes",
+  },
+  {
+    label: "Database Anggota",
+    href: "/database-anggota",
+  },
+  {
+    label: "Akademi",
+    href: "/akademi",
+  },
+  {
+    label: "Agenda",
+    href: "/agenda",
+  },
+  {
+    label: "Berita",
+    href: "/berita",
+  },
 ];
 
 export default function PakarPage() {
+
+  /**
+   * STATE
+   */
   const [data, setData] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/pakar")
-      .then((res) => res.json())
-      .then((json) => {
-        setData(json);
-        setLoading(false);
-      });
-  }, []);
-
-  return (
-    <div className="max-w-6xl mx-auto p-6">
-
-      {/* NAV */}
-      <nav className="flex gap-4 mb-6">
-        {menus.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="text-sm hover:text-green-600"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-
-      
-    <main className="min-h-screen bg-gradient-to-b from-green to-gray-50">
-
-   {/* HEADER */}
-     <header className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur-xl shadow-sm">
-
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-0">
-
-          {/* LOGO */}
-
-          <div className="flex items-center">
-            <img
-              src="/logo-mes-jabar.png"
-              alt="MES Jabar"
-              className="h-25 w-auto"
-            />
-          </div>
-
-          {/* MENU */}
-         <nav className="hidden gap-8 text-sm font-semibold text-green-900 lg:flex">
-            {menus.map((item, i) => (
-              <Link
-                key={i}
-                href="#"
-                className="transition hover:text-green-600"
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
-
-          {/* ICON */}
-          <div className="flex items-center gap-4 text-green-900">
-            <Search className="h-5 w-5" />
-            <Bell className="h-5 w-5" />
-
-            <button className="rounded-xl bg-green-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-green-800">
-              Login
-            </button>
-          </div>
-
-        </div>
-      </header>
-
-export default function PakarPage() {
-
-
-
-  const [data, setData] = useState<any[]>([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-
- <main className="min-h-screen bg-gradient-to-b from-green to-gray-50">
-
-   {/* HEADER */}
-     <header className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur-xl shadow-sm">
-
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-0">
-
-          {/* LOGO */}
-
-          <div className="flex items-center">
-            <img
-              src="/logo-mes-jabar.png"
-              alt="MES Jabar"
-              className="h-25 w-auto"
-            />
-          </div>
-
-          {/* MENU */}
-         <nav className="hidden gap-8 text-sm font-semibold text-green-900 lg:flex">
-            {menus.map((item, i) => (
-              <Link
-                key={i}
-                href="#"
-                className="transition hover:text-green-600"
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
-
-          {/* ICON */}
-          <div className="flex items-center gap-4 text-green-900">
-            <Search className="h-5 w-5" />
-            <Bell className="h-5 w-5" />
-
-            <button className="rounded-xl bg-green-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-green-800">
-              Login
-            </button>
-          </div>
-
-        </div>
-      </header>
-
+  /**
+   * FETCH DATA
+   */
   useEffect(() => {
 
     async function fetchData() {
@@ -159,8 +62,6 @@ export default function PakarPage() {
         );
 
         const json = await res.json();
-
-        console.log(json);
 
         setData(json);
 
@@ -180,7 +81,7 @@ export default function PakarPage() {
   }, []);
 
   /**
-   * SEARCH
+   * FILTER
    */
   const filtered = data.filter((item) => {
 
@@ -193,15 +94,67 @@ export default function PakarPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+
+      {/* HEADER */}
+      <header className="fixed left-0 top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur-xl shadow-sm">
+
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
+
+          {/* LOGO */}
+          <div className="flex items-center">
+
+            <img
+              src="/logo-mes-jabar.png"
+              alt="MES Jabar"
+              className="h-16 w-auto"
+            />
+
+          </div>
+
+          {/* MENU */}
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-green-900">
+
+            {menus.map((item) => (
+
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition hover:text-green-600"
+              >
+                {item.label}
+              </Link>
+
+            ))}
+
+          </nav>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-4 text-green-900">
+
+            <Search className="h-5 w-5 cursor-pointer" />
+
+            <Bell className="h-5 w-5 cursor-pointer" />
+
+            <button className="rounded-xl bg-green-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-green-800">
+              Login
+            </button>
+
+          </div>
+
+        </div>
+
+      </header>
 
       {/* HERO */}
-      <section className="bg-gradient-to-r from-green-900 via-green-700 to-emerald-600 py-16">
+      <section className="bg-gradient-to-r from-green-900 via-green-700 to-emerald-600 pt-40 pb-16">
 
         <div className="max-w-7xl mx-auto px-4">
 
           <div className="grid lg:grid-cols-2 gap-10 items-center">
 
+            {/* LEFT */}
             <div>
 
               <h1 className="text-5xl font-bold text-white leading-tight">
@@ -226,9 +179,10 @@ export default function PakarPage() {
 
             </div>
 
+            {/* RIGHT */}
             <div className="grid grid-cols-2 gap-5">
 
-              <div className="bg-white rounded-2xl p-6">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
 
                 <div className="text-4xl font-bold text-green-700">
                   {data.length}
@@ -240,7 +194,7 @@ export default function PakarPage() {
 
               </div>
 
-              <div className="bg-white rounded-2xl p-6">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
 
                 <div className="text-4xl font-bold text-green-700">
                   100+
@@ -267,7 +221,9 @@ export default function PakarPage() {
 
           {/* SIDEBAR */}
           <div className="lg:col-span-3">
+
             <SidebarFilter />
+
           </div>
 
           {/* LIST */}
@@ -287,14 +243,17 @@ export default function PakarPage() {
 
             {/* LOADING */}
             {loading && (
+
               <div className="text-gray-500">
                 Loading data pakar...
               </div>
+
             )}
 
             {/* EMPTY */}
             {!loading &&
               filtered.length === 0 && (
+
                 <div className="bg-white rounded-2xl p-10 text-center border">
 
                   <h3 className="text-2xl font-bold text-gray-700">
@@ -307,6 +266,7 @@ export default function PakarPage() {
                   </p>
 
                 </div>
+
               )}
 
             {/* GRID */}
@@ -329,6 +289,6 @@ export default function PakarPage() {
 
       </section>
 
-    </div>
+    </main>
   );
 }
