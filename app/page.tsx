@@ -80,9 +80,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f5f7f6]">
 
-      {/* ================= HEADER ================= */}
-      
-
       {/* ================= HERO ================= */}
       <section className="relative">
         <div className="relative h-[560px] overflow-hidden rounded-b-[50px]">
@@ -184,11 +181,10 @@ export default function Home() {
       </section>
 
       {/* ================= LAYANAN ================= */}
+  
       <LayananSection />
 
-    
-
-      {/* ================= NEWSLETTER ================= */}
+          {/* ================= NEWSLETTER ================= */}
 <section className="pb-14">
   <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
