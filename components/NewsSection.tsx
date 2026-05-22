@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 type Post = {
   title: string;
@@ -15,18 +16,17 @@ export default function NewsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      "https://mada.akarmusic.com/wp-json/wp/v2/posts?categories=4&_embed"
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=5"
+        );
+
+        const data = await res.json();
+
         const formatted = data.map((item: any) => ({
-          title: item.title.rendered,
-          date: new Date(item.date).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }),
+          title: item.title?.rendered || "",
+          date: new Date(item.date).toLocaleDateString("id-ID"),
           image:
             item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
             "/hero.jpg",
@@ -34,100 +34,52 @@ export default function NewsSection() {
         }));
 
         setPosts(formatted);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(err);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <section>
 
-      {/* HEADER */}
-      <div className="mb-5 flex items-center justify-between">
+      <h2 className="text-2xl font-bold mb-4">Berita MES</h2>
 
-        <h2 className="text-2xl font-black text-slate-900">
-          Berita MES
-        </h2>
+      {loading && <p>Loading...</p>}
 
-        <button className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-semibold shadow-sm transition hover:shadow-md">
-          Semua Berita
-        </button>
-
-      </div>
-
-      {/* LOADING */}
-      {loading && (
-        <div className="space-y-4">
-
-          {[1, 2, 3].map((item) => (
-            <div
-              key={item}
-              className="flex animate-pulse gap-4 rounded-2xl bg-white p-3 shadow-sm"
-            >
-              <div className="h-20 w-28 rounded-xl bg-gray-200" />
-
-              <div className="flex-1 space-y-3 py-1">
-                <div className="h-4 w-full rounded bg-gray-200" />
-                <div className="h-4 w-2/3 rounded bg-gray-200" />
-                <div className="h-3 w-24 rounded bg-gray-100" />
-              </div>
-            </div>
-          ))}
-
-        </div>
-      )}
-
-      {/* LIST BERITA */}
       <div className="space-y-4">
-
         {posts.map((item) => (
-
           <Link
-            href={`/news/${item.slug}`}
             key={item.slug}
-            className="group flex gap-4 rounded-2xl border border-gray-100 bg-white/80 backdrop-blur-xl p-3 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+            href={`/news/${item.slug}`}
+            className="flex gap-4 p-3 bg-white rounded-xl shadow-sm"
           >
 
-            {/* IMAGE */}
-            <div className="overflow-hidden rounded-xl">
-              <img
+            <div className="relative h-20 w-28 overflow-hidden rounded-lg">
+              <Image
                 src={item.image}
                 alt={item.title}
-                className="h-20 w-28 object-cover transition duration-500 group-hover:scale-110"
+                fill
+                className="object-cover"
               />
             </div>
 
-            {/* CONTENT */}
-            <div className="flex flex-1 flex-col justify-between">
-
-              <h5
-                className="line-clamp-2 text-sm font-bold leading-snug text-slate-800 transition group-hover:text-green-700"
-                dangerouslySetInnerHTML={{
-                  __html: item.title,
-                }}
+            <div>
+              <h3
+                className="font-semibold text-sm line-clamp-2"
+                dangerouslySetInnerHTML={{ __html: item.title }}
               />
-
-              <div className="mt-3 flex items-center justify-between">
-
-                <p className="text-xs text-slate-500">
-                  {item.date}
-                </p>
-
-                <span className="text-xs font-semibold text-green-700 opacity-0 transition group-hover:opacity-100">
-                  Baca →
-                </span>
-
-              </div>
-
+              <p className="text-xs text-gray-500 mt-1">
+                {item.date}
+              </p>
             </div>
 
           </Link>
-
         ))}
-
       </div>
 
     </section>

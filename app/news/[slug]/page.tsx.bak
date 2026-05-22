@@ -205,8 +205,11 @@ export default async function Page({
         )}
 
         {/* CONTENT */}
-        <div
-          className="mt-8 prose max-w-none text-gray-700  [&>*]:mb-4
+             <div
+          className="
+            text-gray-700 leading-relaxed
+
+            [&>*]:mb-4
             [&>p]:mb-5
 
             [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold
@@ -220,8 +223,11 @@ export default async function Page({
 
             [&>p>a]:text-orange-500 [&>p>a]:underline
           "
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          dangerouslySetInnerHTML={{
+            __html: post.content.rendered,
+          }}
         />
+      </div>
 
       </article>
 
