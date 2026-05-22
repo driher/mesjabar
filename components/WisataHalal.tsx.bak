@@ -1,0 +1,66 @@
+"use client";
+
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+
+const data = [
+  { year: 2020, index: 62, visitors: 120, potential: 70 },
+  { year: 2021, index: 66, visitors: 135, potential: 75 },
+  { year: 2022, index: 71, visitors: 150, potential: 82 },
+  { year: 2023, index: 76, visitors: 175, potential: 88 },
+  { year: 2024, index: 82, visitors: 210, potential: 92 },
+  { year: 2025, index: 86, visitors: 240, potential: 96 },
+];
+
+export default function WisataHalalJabarChart() {
+  return (
+    <div className="bg-white p-5 rounded-2xl shadow-md w-full h-[350px]">
+      <h2 className="text-lg font-bold mb-3">
+        Grafik Wisata Halal Jawa Barat
+      </h2>
+
+      <ResponsiveContainer width="100%" height="90%">
+        <LineChart data={data}>
+          <XAxis dataKey="year" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+
+          <Line
+            type="monotone"
+            dataKey="index"
+            stroke="#16a34a"
+            name="Index Halal Tourism"
+          />
+
+          <Line
+            type="monotone"
+            dataKey="visitors"
+            stroke="#2563eb"
+            name="Wisatawan (ribu)"
+          />
+
+          <Line
+            type="monotone"
+            dataKey="potential"
+            stroke="#f59e0b"
+            name="Potensi Ekonomi"
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+{/* SOURCE */}
+<p className="text-[10px] text-gray-400 mt-2 leading-snug">
+  Sumber: Kementerian Pariwisata & Ekonomi Kreatif RI,  
+  Indonesia Muslim Travel Index (IMTI) 2025,  
+  Badan Pusat Statistik (BPS), serta publikasi ilmiah pariwisata halal Jawa Barat.
+</p>

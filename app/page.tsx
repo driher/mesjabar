@@ -17,6 +17,11 @@ import NewsSection from "@/components/NewsSection";
 import AgendaSection from "@/components/AgendaSection";
 import LayananSection from "@/components/LayananSection";
 import Footer from "@/components/Footer";
+import KursWidget from "@/components/KursWidget";
+import WisataHalal from "@/components/WisataHalal";
+import IndustriHalal from "@/components/IndustriHalal";
+import SahamSyariah from "@/components/SahamSyariah";
+
 
 /* ================= COUNTER ================= */
 
@@ -252,6 +257,33 @@ export default function Home() {
 
       {/* ================= LAYANAN ================= */}
       <LayananSection />
+
+    {/* ================= INFO GRAFIK ================= */}
+<section className="mx-auto text-center max-w-7xl px-6 py-0">
+
+         <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-bold uppercase  tracking-wider text-green-700">
+           INFO GRAFIK
+          </span>
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+      
+      <div className="bg-white shadow rounded-xl p-4">
+        <KursWidget />
+      </div>
+
+      <div className="bg-white shadow rounded-xl p-4">
+        <WisataHalal />
+      </div>
+
+      <div className="bg-white shadow rounded-xl p-4">
+        <IndustriHalal />
+      </div>
+
+      <div className="bg-white shadow rounded-xl p-4">
+         <SahamSyariah />
+      </div>
+
+    </div>
+</section>
 
       {/* ================= NEWSLETTER ================= */}
       <section className="pb-14">
