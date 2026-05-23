@@ -1,25 +1,30 @@
-import Image from "next/image";
 import Link from "next/link";
-
-import { Post } from "@/types/post";
+import Image from "next/image";
 
 /* =========================
    TYPES
 ========================= */
-interface Props {
-  post: Post;
+interface Post {
+  id: number;
+  slug: string;
+
+  title?: {
+    rendered?: string;
+  };
+
+  excerpt?: {
+    rendered?: string;
+  };
+
+  _embedded?: {
+    ["wp:featuredmedia"]?: {
+      source_url?: string;
+    }[];
+  };
 }
 
-/* =========================
-   CLEAN HTML
-========================= */
-function stripHtml(
-  html: string = ""
-) {
-  return html.replace(
-    /<[^>]*>?/gm,
-    ""
-  );
+interface Props {
+  post: Post;
 }
 
 /* =========================
@@ -28,19 +33,10 @@ function stripHtml(
 export default function SearchResultCard({
   post,
 }: Props) {
+
   const image =
-    post?._embedded?.[
-      "wp:featuredmedia"
-    ]?.[0]?.source_url ||
-    "/placeholder.jpg";
-
-  const title =
-    post?.title?.rendered ||
-    "Tanpa Judul";
-
-  const excerpt = stripHtml(
-    post?.excerpt?.rendered || ""
-  ).slice(0, 140);
+    post?._embedded?.["wp:featuredmedia"]?.[0]
+      ?.source_url || "/hero.jpg";
 
   return (
     <Link
@@ -54,10 +50,8 @@ export default function SearchResultCard({
         border-gray-100
         bg-white
         p-4
-        shadow-sm
         transition-all
         hover:-translate-y-1
-        hover:border-green-100
         hover:shadow-lg
       "
     >
@@ -67,15 +61,13 @@ export default function SearchResultCard({
 
         <Image
           src={image}
-          alt={stripHtml(title)}
+          alt={
+            post?.title?.rendered ||
+            "MES Jabar"
+          }
           fill
           sizes="120px"
-          className="
-            object-cover
-            transition-transform
-            duration-300
-            group-hover:scale-105
-          "
+          className="object-cover transition duration-300 group-hover:scale-105"
         />
 
       </div>
@@ -86,22 +78,30 @@ export default function SearchResultCard({
         <h3
           className="
             line-clamp-2
-            text-sm
             font-bold
-            leading-6
             text-gray-900
             transition-colors
-            group-hover:text-green-700
-            sm:text-base
+            group-hover:text-emerald-600
           "
           dangerouslySetInnerHTML={{
-            __html: title,
+            __html:
+              post?.title?.rendered ||
+              "Tanpa Judul",
           }}
         />
 
-        <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-500">
-          {excerpt}
-        </p>
+        <div
+          className="
+            mt-2
+            line-clamp-2
+            text-sm
+            text-gray-500
+          "
+          dangerouslySetInnerHTML={{
+            __html:
+              post?.excerpt?.rendered || "",
+          }}
+        />
 
       </div>
 

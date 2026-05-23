@@ -1,41 +1,110 @@
+import Image from "next/image";
 import Link from "next/link";
+
 import { Post } from "@/types/post";
 
+/* =========================
+   TYPES
+========================= */
 interface Props {
   post: Post;
 }
 
-export default function SearchResultCard({ post }: Props) {
+/* =========================
+   CLEAN HTML
+========================= */
+function stripHtml(
+  html: string = ""
+) {
+  return html.replace(
+    /<[^>]*>?/gm,
+    ""
+  );
+}
+
+/* =========================
+   COMPONENT
+========================= */
+export default function SearchResultCard({
+  post,
+}: Props) {
   const image =
-    post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    post?._embedded?.[
+      "wp:featuredmedia"
+    ]?.[0]?.source_url ||
     "/placeholder.jpg";
+
+  const title =
+    post?.title?.rendered ||
+    "Tanpa Judul";
+
+  const excerpt = stripHtml(
+    post?.excerpt?.rendered || ""
+  ).slice(0, 140);
 
   return (
     <Link
-      href={`/berita/${post.slug}`}
-      className="group flex gap-4 p-4 rounded-2xl border border-gray-100 bg-white hover:shadow-lg transition-all"
+      href={`/news/${post.slug}`}
+      className="
+        group
+        flex
+        gap-4
+        rounded-2xl
+        border
+        border-gray-100
+        bg-white
+        p-4
+        shadow-sm
+        transition-all
+        hover:-translate-y-1
+        hover:border-green-100
+        hover:shadow-lg
+      "
     >
-      <img
-        src={image}
-        alt={post.title.rendered}
-        className="w-28 h-24 object-cover rounded-xl shrink-0"
-      />
 
-      <div className="flex-1 min-w-0">
-        <h3
-          className="font-bold text-gray-900 line-clamp-2 group-hover:text-emerald-600 transition-colors"
-          dangerouslySetInnerHTML={{
-            __html: post.title.rendered,
-          }}
+      {/* IMAGE */}
+      <div className="relative h-24 w-28 shrink-0 overflow-hidden rounded-xl">
+
+        <Image
+          src={image}
+          alt={stripHtml(title)}
+          fill
+          sizes="120px"
+          className="
+            object-cover
+            transition-transform
+            duration-300
+            group-hover:scale-105
+          "
         />
 
-        <div
-          className="text-sm text-gray-500 mt-2 line-clamp-2"
-          dangerouslySetInnerHTML={{
-            __html: post.excerpt.rendered,
-          }}
-        />
       </div>
+
+      {/* CONTENT */}
+      <div className="min-w-0 flex-1">
+
+        <h3
+          className="
+            line-clamp-2
+            text-sm
+            font-bold
+            leading-6
+            text-gray-900
+            transition-colors
+            group-hover:text-green-700
+            sm:text-base
+          "
+          dangerouslySetInnerHTML={{
+            __html: title,
+          }}
+        />
+
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-500">
+          {excerpt}
+        </p>
+
+      </div>
+
     </Link>
   );
 }
