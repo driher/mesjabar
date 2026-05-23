@@ -7,282 +7,128 @@ interface PageProps {
 }
 
 /**
- * GET DETAIL PAKAR
+ * FETCH BY SLUG
  */
-async function getPakar(id: string) {
-  try {
-
-    const res = await fetch(
-      `https://mada.akarmusic.com/wp-json/wp/v2/pakar/${id}?_embed`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      return null;
+async function getPakarBySlug(slug: string) {
+  const res = await fetch(
+    `https://mada.akarmusic.com/wp-json/wp/v2/pakar?slug=${slug}&_embed`,
+    {
+      cache: "no-store",
     }
+  );
 
-    return await res.json();
+  if (!res.ok) return null;
 
-  } catch (error) {
+  const data = await res.json();
 
-    console.error(error);
-
-    return null;
-  }
+  return data?.[0] || null;
 }
 
-export default async function DetailPakar({
-  params,
-}: PageProps) {
+export default async function DetailPakar({ params }: PageProps) {
+  const { slug } = await params; // 🔥 FIX UTAMA
 
-  /**
-   * PARAMS
-   */
-  const { slug } = await params;
+  const data = await getPakarBySlug(slug);
 
-  /**
-   * FETCH DATA
-   */
-  const data = await getPakar(slug);
-
-  /**
-   * NOT FOUND
-   */
   if (!data) {
     notFound();
   }
 
-  /**
-   * CUSTOM FIELDS
-   */
-  const custom =
-    data?.custom_fields || {};
+  const custom = data?.custom_fields || {};
 
-  /**
-   * NAMA
-   */
   const nama =
     custom?.nama ||
     data?.title?.rendered ||
     "Tanpa Nama";
 
-  /**
-   * FOTO CUSTOM (HARUS URL)
-   */
-  const customFoto =
-    typeof custom?.foto === "string" &&
-    custom.foto.startsWith("http")
-      ? custom.foto
-      : null;
+  const wpImage =
+    data?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
 
-  /**
-   * FEATURED IMAGE WORDPRESS
-   */
-  const wpFeatured =
-    data?._embedded?.["wp:featuredmedia"]?.[0]
-      ?.source_url || null;
+  const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    nama
+  )}&background=15803d&color=fff&size=400`;
 
-  /**
-   * AVATAR FALLBACK
-   */
-  const avatar =
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      nama
-    )}&background=15803d&color=ffffff&size=400`;
-
-  /**
-   * FOTO FINAL
-   */
   const foto =
-    customFoto ||
-    wpFeatured ||
-    avatar;
+    typeof custom?.foto === "string" && custom.foto.startsWith("http")
+      ? custom.foto
+      : wpImage || avatar;
 
-  return (
-    <async function getPakar(key: string) {
-  try {
-    const isId = !isNaN(Number(key));
-
-    const url = isId
-      ? `https://mada.akarmusic.com/wp-json/wp/v2/pakar/${key}?_embed`
-      : `https://mada.akarmusic.com/wp-json/wp/v2/pakar?slug=${key}&_embed`;
-
-    const res = await fetch(url, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-
-    return isId ? data : data?.[0] || null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-} className="min-h-screen bg-gray-50 py-10">
-
+ return (
+    <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-6xl mx-auto px-4">
-
-        <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+        <div className="bg-white rounded-3xl overflow-hidden shadow-xl border">
 
           {/* HEADER */}
-          <div className="h-64 bg-gradient-to-r from-green-900 via-green-700 to-emerald-500 relative">
-
-            <div className="absolute inset-0 bg-black/10"></div>
-
-          </div>
+          <div className="h-64 bg-gradient-to-r from-green-900 via-green-700 to-emerald-500" />
 
           {/* CONTENT */}
           <div className="px-8 pb-10 relative">
 
             {/* FOTO */}
             <div className="absolute -top-24 left-8">
-
               <img
                 src={foto}
                 alt={nama}
-                className="w-44 h-44 rounded-full border-[8px] border-white object-cover shadow-2xl bg-white"
+                className="w-44 h-44 rounded-full border-8 border-white object-cover shadow-xl"
               />
-
             </div>
 
             {/* INFO */}
             <div className="pt-28">
 
-              {/* BADGE */}
-              <span className="inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
+              <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-sm font-medium text-green-700">
                 Pakar MES Jawa Barat
               </span>
 
-              {/* NAMA */}
               <h1
-                className="text-4xl font-bold text-gray-900 mt-5"
-                dangerouslySetInnerHTML={{
-                  __html: nama,
-                }}
+                className="text-4xl font-bold mt-5 text-gray-900"
+                dangerouslySetInnerHTML={{ __html: nama }}
               />
 
-              {/* BIDANG */}
               <p className="text-xl text-green-700 mt-3 font-medium">
-                {custom?.bidang ||
-                  "Bidang belum tersedia"}
+                {custom?.bidang || "Bidang belum tersedia"}
               </p>
 
-              {/* GRID */}
               <div className="grid lg:grid-cols-3 gap-8 mt-10">
 
                 {/* LEFT */}
                 <div className="lg:col-span-2 space-y-6">
 
-                  {/* SPESIALISASI */}
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-
+                  <div className="bg-gray-50 rounded-2xl p-6 border">
                     <h2 className="text-2xl font-bold mb-4">
                       Spesialisasi
                     </h2>
-
-                    <p className="text-gray-600 leading-8 whitespace-pre-line">
-                      {custom?.spesialisasi ||
-                        "Data spesialisasi belum tersedia."}
+                    <p className="text-gray-600 whitespace-pre-line">
+                      {custom?.spesialisasi || "-"}
                     </p>
-
                   </div>
 
-                  {/* ALAMAT */}
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-
+                  <div className="bg-gray-50 rounded-2xl p-6 border">
                     <h2 className="text-2xl font-bold mb-4">
                       Alamat
                     </h2>
-
-                    <p className="text-gray-600 leading-8 whitespace-pre-line">
-                      {custom?.alamat ||
-                        "Data alamat belum tersedia."}
+                    <p className="text-gray-600 whitespace-pre-line">
+                      {custom?.alamat || "-"}
                     </p>
-
                   </div>
 
                 </div>
 
                 {/* RIGHT */}
-                <div>
+                <div className="bg-gray-50 rounded-2xl p-6 border sticky top-5">
 
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 sticky top-5">
+                  <h2 className="text-2xl font-bold mb-5">
+                    Kontak & Informasi
+                  </h2>
 
-                    <h2 className="text-2xl font-bold mb-5">
-                      Kontak & Informasi
-                    </h2>
+                  <div className="space-y-3 text-gray-700">
 
-                    <div className="space-y-5">
+                    <p><b>Email:</b> {custom?.email || "-"}</p>
+                    <p><b>No HP:</b> {custom?.no_hp || "-"}</p>
+                    <p><b>ID:</b> #{data?.id}</p>
+                    <p><b>Slug:</b> {data?.slug}</p>
 
-                      {/* EMAIL */}
-                      <div>
-
-                        <div className="text-gray-400 text-sm mb-1">
-                          Email
-                        </div>
-
-                        <div className="font-medium text-gray-800 break-all">
-                          {custom?.email || "-"}
-                        </div>
-
-                      </div>
-
-                      {/* HP */}
-                      <div>
-
-                        <div className="text-gray-400 text-sm mb-1">
-                          No HP
-                        </div>
-
-                        <div className="font-medium text-gray-800">
-                          {custom?.no_hp || "-"}
-                        </div>
-
-                      </div>
-
-                      {/* ID */}
-                      <div>
-
-                        <div className="text-gray-400 text-sm mb-1">
-                          ID Pakar
-                        </div>
-
-                        <div className="font-medium text-gray-800">
-                          #{data?.id}
-                        </div>
-
-                      </div>
-
-                      {/* SLUG */}
-                      <div>
-
-                        <div className="text-gray-400 text-sm mb-1">
-                          Slug
-                        </div>
-
-                        <div className="font-medium text-gray-800">
-                          {data?.slug}
-                        </div>
-
-                      </div>
-
-                      {/* STATUS */}
-                      <div>
-
-                        <div className="text-gray-400 text-sm mb-1">
-                          Status
-                        </div>
-
-                        <div className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                          Aktif
-                        </div>
-
-                      </div>
-
+                    <div className="mt-4 inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
+                      Aktif
                     </div>
 
                   </div>
@@ -296,9 +142,7 @@ export default async function DetailPakar({
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }
