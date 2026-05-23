@@ -1,3 +1,5 @@
+// app/page.tsx
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,269 +13,362 @@ import LayananSection from "@/components/LayananSection";
 import Footer from "@/components/Footer";
 import Stats from "@/components/Stats";
 
+/* ================= SEO ================= */
 
+export const metadata = {
+  title:
+    "MES Jawa Barat - Masyarakat Ekonomi Syariah",
+  description:
+    "Portal resmi MES Jawa Barat untuk informasi ekonomi syariah, program unggulan, agenda, UMKM halal, dan pengembangan ekonomi umat.",
+};
 
 /* ================= DATA ================= */
 
 const programs = [
   {
     title: "Akademi Ekonomi Syariah",
-    desc: "Pengembangan SDM unggul di bidang ekonomi syariah",
+    desc:
+      "Pengembangan SDM unggul di bidang ekonomi syariah",
     color:
       "bg-green-100 text-green-700",
   },
   {
     title: "Pendamping Halal",
-    desc: "Pendampingan sertifikasi halal untuk UMKM dan industri",
+    desc:
+      "Pendampingan sertifikasi halal untuk UMKM dan industri",
     color:
       "bg-yellow-100 text-yellow-700",
   },
   {
     title: "Koperasi Syariah",
-    desc: "Koperasi modern berbasis syariah",
+    desc:
+      "Koperasi modern berbasis syariah",
     color:
       "bg-blue-100 text-blue-700",
   },
   {
     title: "Donasi & ZISWAF",
-    desc: "Pemberdayaan ekonomi umat",
+    desc:
+      "Pemberdayaan ekonomi umat",
     color:
       "bg-violet-100 text-violet-700",
   },
 ];
 
+/* ================= MITRA ================= */
+
+const partners = [
+  {
+    name: "Bank Indonesia",
+    logo:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/BI_Logo.png/1920px-BI_Logo.png",
+  },
+  {
+    name: "OJK",
+    logo:
+      "https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png",
+  },
+  {
+    name: "BJB Syariah",
+    logo:
+      "https://www.icdx.co.id/cms/img/9d20f3ec-f97d-40c0-a237-c9a450e280dd/bjb-syariah.png",
+  },
+  {
+    name: "Rumah Zakat",
+    logo:
+      "https://www.rumahzakat.org/wp-content/uploads/2023/10/logo-rumah-zakat-1.png",
+  },
+  {
+    name: "UIN SGD",
+    logo:
+      "https://uinsgd.ac.id/wp-content/uploads/2023/03/Logo-uinsgd_official.png",
+  },
+  {
+    name: "UPI",
+    logo:
+      "https://images.seeklogo.com/logo-png/33/2/upi-universitas-pendidikan-indonesia-logo-png_seeklogo-332580.png",
+  },
+  {
+    name: "BUMN",
+    logo:
+      "https://png.pngtree.com/png-clipart/20230627/original/pngtree-soya-logo-for-indonesia-horizontally-vector-png-image_9229872.png",
+  },
+];
+
 /* ================= PAGE ================= */
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#f5f7f6]">
+    <main className="min-h-screen bg-[#f5f7f6] overflow-hidden">
 
       {/* ================= HERO ================= */}
+
       <section className="relative">
-        <div className="relative h-[560px] overflow-hidden rounded-b-[50px]">
+
+        <div className="relative h-[620px] overflow-hidden rounded-b-[40px]">
 
           <Image
             src="/hero.jpg"
-            alt="Hero MES Jabar"
+            alt="MES Jawa Barat"
             fill
             priority
+            sizes="100vw"
             className="object-cover"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-black/20" />
 
           <div className="absolute inset-0 flex items-center">
-            <div className="mx-auto grid max-w-7xl grid-cols-1 items-center px-6 pt-12 lg:grid-cols-2">
 
-              <div className="max-w-xl">
-                <h1 className="mt-5 text-4xl font-black leading-tight text-green-900 lg:text-5xl">
-                  Membangun Ekosistem
+            <div className="mx-auto grid max-w-7xl grid-cols-1 items-center px-5 pt-10 lg:grid-cols-2 lg:px-8">
+
+              <div className="max-w-2xl">
+
+                <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-bold uppercase tracking-wider text-green-700">
+                  Portal Resmi MES Jawa Barat
+                </span>
+
+                <h1 className="mt-5 text-4xl font-black leading-tight text-green-950 sm:text-5xl lg:text-6xl">
+                  Membangun
+                  <br />
+                  Ekosistem
                   <br />
                   Ekonomi Syariah
-                  <br />
-                  Jawa Barat
                 </h1>
 
-                <p className="mt-5 max-w-lg text-base leading-8 text-slate-700">
-                  Bersama memberdayakan umat dan memperkuat ekonomi syariah
-                  melalui kolaborasi, inovasi, dan pengembangan SDM unggul.
+                <p className="mt-6 max-w-xl text-base leading-8 text-slate-700 sm:text-lg">
+                  Bersama memberdayakan umat dan memperkuat ekonomi syariah melalui kolaborasi, inovasi, pendidikan, dan pengembangan SDM unggul.
                 </p>
 
-                <div className="mt-7 flex gap-3">
-                  <button className="rounded-xl bg-green-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-600">
-                    Jelajahi Program
-                  </button>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
 
-                  <button className="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+                  <Link
+                    href="/program"
+                    className="inline-flex items-center justify-center rounded-2xl bg-green-700 px-7 py-4 text-sm font-bold text-white transition hover:bg-green-600"
+                  >
+                    Jelajahi Program
+                  </Link>
+
+                  <Link
+                    href="/profil-mes"
+                    className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-7 py-4 text-sm font-bold text-slate-700 transition hover:bg-slate-100"
+                  >
                     Tentang MES
-                  </button>
+                  </Link>
+
                 </div>
+
               </div>
 
             </div>
+
           </div>
 
         </div>
+
       </section>
 
-   {/* ================= STATS ================= */}
-<section className="relative z-20 -mt-10">
-  <div className="mx-auto max-w-7xl px-4">
-    <Stats />
-  </div>
-</section>
+      {/* ================= STATS ================= */}
+
+      <section className="relative z-20 -mt-10">
+
+        <div className="mx-auto max-w-7xl px-4">
+
+          <Stats />
+
+        </div>
+
+      </section>
 
       {/* ================= CONTENT ================= */}
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <div className="grid gap-6 lg:grid-cols-12">
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+
+        <div className="grid gap-8 lg:grid-cols-12">
 
           {/* PROGRAM */}
-          <div className="lg:col-span-6">
-            <h2 className="mb-5 text-2xl font-black text-slate-900">
-              Program Unggulan
-            </h2>
 
-            <div className="grid gap-4 md:grid-cols-2">
+          <div className="lg:col-span-6">
+
+            <div className="flex items-center justify-between">
+
+              <h2 className="text-2xl font-black text-slate-900 sm:text-3xl">
+                Program Unggulan
+              </h2>
+
+            </div>
+
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+
               {programs.map((item) => (
-                <div
+
+                <article
                   key={item.title}
-                  className="rounded-2xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                  className="rounded-3xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${item.color}`}>
-                    <GraduationCap className="h-5 w-5" />
+
+                  <div
+                    className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${item.color}`}
+                  >
+
+                    <GraduationCap className="h-6 w-6" />
+
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-800">
+                  <h3 className="text-lg font-bold text-slate-900">
                     {item.title}
                   </h3>
 
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
+                  <p className="mt-3 text-sm leading-7 text-slate-500">
                     {item.desc}
                   </p>
-                </div>
+
+                </article>
+
               ))}
+
             </div>
+
           </div>
 
           {/* AGENDA */}
+
           <div className="lg:col-span-3">
+
             <AgendaSection />
+
           </div>
 
           {/* NEWS */}
+
           <div className="lg:col-span-3">
+
             <NewsSection />
+
           </div>
 
         </div>
+
       </section>
 
       {/* ================= LAYANAN ================= */}
-  
+
       <LayananSection />
 
-          {/* ================= NEWSLETTER ================= */}
-<section className="pb-14">
-  <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      {/* ================= NEWSLETTER ================= */}
 
-    <div className="rounded-3xl bg-gradient-to-r from-green-900 via-green-800 to-emerald-700 px-5 py-6 sm:px-8 sm:py-7 shadow-xl">
+      <section className="pb-14">
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
-        {/* TEXT */}
-        <div className="max-w-xl">
+          <div className="rounded-[32px] bg-gradient-to-r from-green-900 via-green-800 to-emerald-700 px-6 py-7 shadow-xl sm:px-10 sm:py-9">
 
-          <h3 className="text-lg font-bold leading-snug text-white sm:text-xl">
-            Dapatkan informasi terbaru dari MES Jawa Barat
-          </h3>
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-          <p className="mt-2 text-sm leading-relaxed text-green-100">
-            Berlangganan newsletter untuk update program terbaru
-          </p>
+              {/* TEXT */}
 
-        </div>
+              <div className="max-w-xl">
 
-       {/* FORM */}
-<div className="flex w-full flex-col gap-3 sm:flex-row lg:max-w-xl">
+                <h3 className="text-xl font-black leading-snug text-white">
+                  Dapatkan informasi terbaru dari MES Jawa Barat
+                </h3>
 
-  <input
-    type="email"
-    placeholder="Masukkan email Anda"
-    className="h-14 w-full rounded-2xl border border-white/20 bg-white px-5 text-sm shadow-sm outline-none placeholder:text-gray-400 sm:h-14"
-  />
+                <p className="mt-3 text-sm leading-7 text-green-100">
+                  Berlangganan newsletter untuk update program terbaru, ekonomi syariah, UMKM halal, dan agenda MES.
+                </p>
 
-  <button className="h-14 rounded-2xl bg-yellow-500 px-6 text-sm font-semibold text-white transition hover:bg-yellow-400 whitespace-nowrap">
-    Berlangganan
-  </button>
+              </div>
 
-</div>
-      </div>
+              {/* FORM */}
 
-    </div>
+              <form className="flex w-full flex-col gap-3 sm:flex-row lg:max-w-xl">
 
-  </div>
-</section>
+                <input
+                  type="email"
+                  placeholder="Masukkan email Anda"
+                  className="h-14 w-full rounded-2xl border border-white/20 bg-white px-5 text-sm text-gray-900 shadow-sm outline-none placeholder:text-gray-400"
+                />
 
-{/* ================= MITRA ================= */}
-<section className="pb-14">
+                <button
+                  type="submit"
+                  className="h-14 whitespace-nowrap rounded-2xl bg-yellow-500 px-7 text-sm font-bold text-white transition hover:bg-yellow-400"
+                >
+                  Berlangganan
+                </button>
 
-  <div className="max-w-7xl mx-auto px-6">
+              </form>
 
-    <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-
-      <div className="text-center">
-
-        <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-green-700">
-          Mitra Strategis
-        </span>
-
-        <h2 className="mt-4 text-3xl font-black text-slate-900">
-          Kolaborasi Bersama Mitra
-        </h2>
-
-        <p className="mt-3 text-sm text-slate-500">
-          Bersinergi membangun ekosistem ekonomi syariah yang kuat dan berkelanjutan.
-        </p>
-
-      </div>
-
-      {/* LOGO */}
-      <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
-
-        {[
-          {
-            name: "Bank Indonesia",
-            logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/BI_Logo.png/1920px-BI_Logo.png",
-          },
-          {
-            name: "OJK",
-            logo: "https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png",
-          },
-          {
-            name: "BJB Syariah",
-            logo: "https://www.icdx.co.id/cms/img/9d20f3ec-f97d-40c0-a237-c9a450e280dd/bjb-syariah.png",
-          },
-          {
-            name: "Rumah Zakat",
-            logo: "https://www.rumahzakat.org/wp-content/uploads/2023/10/logo-rumah-zakat-1.png",
-          },
-          {
-            name: "UIN SGD",
-            logo: "https://uinsgd.ac.id/wp-content/uploads/2023/03/Logo-uinsgd_official.png",
-          },
-	  {
-            name: "UPI",
-            logo: "https://images.seeklogo.com/logo-png/33/2/upi-universitas-pendidikan-indonesia-logo-png_seeklogo-332580.png",
-	    },
-          {
-            name: "BUMN",
-            logo: "https://png.pngtree.com/png-clipart/20230627/original/pngtree-soya-logo-for-indonesia-horizontally-vector-png-image_9229872.png",
-          },
-        ].map((item) => (
-
-          <div
-            key={item.name}
-            className="flex h-28 items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 p-6 transition hover:-translate-y-1 hover:bg-white hover:shadow-md"
-          >
-
-            <img
-              src={item.logo}
-              alt={item.name}
-              className="max-h-14 w-auto object-contain grayscale transition hover:grayscale-0"
-            />
+            </div>
 
           </div>
 
-        ))}
+        </div>
 
-      </div>
+      </section>
 
-    </div>
+      {/* ================= MITRA ================= */}
 
-  </div>
+      <section className="pb-16">
 
-</section>
-<Footer />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+
+          <div className="rounded-[32px] border border-gray-200 bg-white p-7 shadow-sm sm:p-10">
+
+            <div className="text-center">
+
+              <span className="inline-flex rounded-full bg-green-100 px-4 py-2 text-xs font-bold uppercase tracking-wider text-green-700">
+                Mitra Strategis
+              </span>
+
+              <h2 className="mt-5 text-3xl font-black text-slate-900">
+                Kolaborasi Bersama Mitra
+              </h2>
+
+              <p className="mt-3 text-sm leading-7 text-slate-500">
+                Bersinergi membangun ekosistem ekonomi syariah yang kuat dan berkelanjutan.
+              </p>
+
+            </div>
+
+            {/* LOGO */}
+
+            <div className="mt-10 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+
+              {partners.map((item) => (
+
+                <div
+                  key={item.name}
+                  className="flex h-28 items-center justify-center rounded-3xl border border-gray-100 bg-gray-50 p-5 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-md"
+                >
+
+                  <div className="relative h-14 w-full">
+
+                    <Image
+                      src={item.logo}
+                      alt={item.name}
+                      fill
+                      sizes="200px"
+                      className="object-contain grayscale transition hover:grayscale-0"
+                    />
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ================= FOOTER ================= */}
+
+      <Footer />
+
     </main>
   );
 }

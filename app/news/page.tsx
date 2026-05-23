@@ -1,209 +1,299 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-const API = "https://mada.akarmusic.com/wp-json/wp/v2";
+export const revalidate = 300;
 
-/* =========================
-   FETCH POSTS (SAFE)
-========================= */
+const API =
+  "https://mada.akarmusic.com/wp-json/wp/v2";
+
+/* =========================================
+   SEO METADATA
+========================================= */
+export const metadata: Metadata = {
+  title:
+    "MES Jabar - Ekonomi Syariah Jawa Barat",
+  description:
+    "Portal resmi Masyarakat Ekonomi Syariah Jawa Barat. Berita ekonomi syariah, halal, UMKM, fintech syariah, dan kegiatan MES Jabar.",
+  keywords: [
+    "MES Jabar",
+    "Ekonomi Syariah",
+    "Berita Syariah",
+    "UMKM Halal",
+    "Fintech Syariah",
+    "Masyarakat Ekonomi Syariah",
+  ],
+  openGraph: {
+    title:
+      "MES Jabar - Ekonomi Syariah Jawa Barat",
+    description:
+      "Portal resmi MES Jawa Barat.",
+    images: ["/hero.jpg"],
+    type: "website",
+  },
+};
+
+/* =========================================
+   FETCH POSTS
+========================================= */
 async function getPosts() {
   try {
     const res = await fetch(
       `${API}/posts?_embed&per_page=10`,
-      { cache: "no-store" }
+      {
+        next: {
+          revalidate: 300,
+        },
+      }
     );
 
-    if (!res.ok) throw new Error("Gagal mengambil berita");
+    if (!res.ok) {
+      return [];
+    }
 
     const data = await res.json();
 
-    return Array.isArray(data) ? data : [];
-  } catch (err) {
-    console.error("Fetch error:", err);
+    return Array.isArray(data)
+      ? data
+      : [];
+  } catch (error) {
+    console.error(
+      "GET POSTS ERROR:",
+      error
+    );
+
     return [];
   }
 }
 
-/* =========================
-   FORMAT DATA (SAFE)
-========================= */
+/* =========================================
+   FORMAT POST
+========================================= */
 function formatPost(item: any) {
+  const cleanExcerpt =
+    item?.excerpt?.rendered
+      ?.replace(/<[^>]*>?/gm, "")
+      ?.replace(/&nbsp;/g, " ")
+      ?.trim()
+      ?.slice(0, 140) || "";
+
   return {
-    id: item?.id,
-    slug: item?.slug || "",
-    title: item?.title?.rendered || "Tanpa Judul",
-    excerpt:
-      item?.excerpt?.rendered
-        ?.replace(/<[^>]+>/g, "")
-        ?.slice(0, 120) || "",
+    id: item?.id || Math.random(),
+    slug: item?.slug || "#",
+    title:
+      item?.title?.rendered ||
+      "Tanpa Judul",
+    excerpt: cleanExcerpt,
     image:
-      item?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+      item?._embedded?.[
+        "wp:featuredmedia"
+      ]?.[0]?.source_url ||
       "/hero.jpg",
     date: item?.date
-      ? new Date(item.date).toLocaleDateString("id-ID", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })
+      ? new Date(item.date).toLocaleDateString(
+          "id-ID",
+          {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }
+        )
       : "",
     category:
-      item?._embedded?.["wp:term"]?.[0]?.[0]?.name || "BERITA",
+      item?._embedded?.["wp:term"]?.[0]?.[0]
+        ?.name || "BERITA",
   };
 }
 
-/* =========================
+/* =========================================
    PAGE
-========================= */
+========================================= */
 export default async function HomePage() {
   const rawPosts = await getPosts();
+
   const posts = rawPosts.map(formatPost);
 
-  const heroNews = posts?.[0] ?? null;
-  const miniNews = posts?.slice(1, 6) ?? [];
-  const latestNews = posts?.slice(6, 9) ?? [];
-  const articles = posts?.slice(0, 5) ?? [];
+  const heroNews = posts[0];
+
+  const miniNews = posts.slice(1, 5);
+
+  const latestNews = posts.slice(5, 8);
+
+  const articles = posts.slice(0, 5);
 
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
 
-      <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="mx-auto max-w-7xl px-4 py-5 lg:px-6">
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
-          {/* ================= LEFT ================= */}
+          {/* ================================= HERO ================================= */}
           <section className="lg:col-span-8">
 
-            {/* HERO */}
             {heroNews && (
               <Link
                 href={`/news/${heroNews.slug}`}
-                className="relative block overflow-hidden rounded-2xl"
+                className="group relative block overflow-hidden rounded-3xl"
               >
+
                 <Image
                   src={heroNews.image}
                   alt={heroNews.title}
                   width={1200}
                   height={700}
-                  sizes="(max-width: 768px) 100vw, 70vw"
-                  className="h-[260px] w-full object-cover sm:h-[340px] lg:h-[420px]"
                   priority
+                  unoptimized
+                  sizes="(max-width:768px) 100vw, 70vw"
+                  className="h-[260px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[340px] lg:h-[460px]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-                <div className="absolute bottom-0 p-4 sm:p-6">
+                <div className="absolute bottom-0 z-10 p-5 sm:p-7">
 
-                  <span className="rounded bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white sm:text-xs">
+                  <span className="inline-flex rounded-full bg-orange-500 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
                     {heroNews.category}
                   </span>
 
-                  <h1 className="mt-3 max-w-3xl text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl">
+                  <h1 className="mt-4 max-w-3xl text-2xl font-black leading-tight text-white sm:text-3xl lg:text-5xl">
                     {heroNews.title}
                   </h1>
 
-                  <p className="mt-2 text-xs text-gray-200">
+                  <p className="mt-3 text-xs text-gray-200 sm:text-sm">
                     {heroNews.date}
                   </p>
 
                 </div>
+
               </Link>
             )}
 
-            {/* MINI NEWS */}
-            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-5">
+            {/* ================================= MINI NEWS ================================= */}
+            <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
 
-              {miniNews.map((item: any) => (
+              {miniNews.map((item) => (
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                  className="group overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={400}
-                    height={250}
-                    sizes="(max-width: 768px) 50vw, 20vw"
-                    className="h-24 w-full object-cover"
-                  />
 
-                  <div className="p-2">
-                    <h3 className="line-clamp-3 text-[12px] font-semibold text-gray-800">
+                  <div className="relative overflow-hidden">
+
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={400}
+                      height={260}
+                      unoptimized
+                      loading="lazy"
+                      sizes="(max-width:768px) 50vw, 25vw"
+                      className="h-28 w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+
+                  </div>
+
+                  <div className="p-3">
+
+                    <h3 className="line-clamp-3 text-sm font-bold leading-5 text-gray-800">
                       {item.title}
                     </h3>
+
                   </div>
+
                 </Link>
               ))}
 
             </div>
 
-            {/* GRID NEWS */}
-            <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* ================================= GRID NEWS ================================= */}
+            <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
 
-              {latestNews.map((item: any) => (
+              {latestNews.map((item) => (
                 <Link
                   key={item.id}
                   href={`/news/${item.slug}`}
-                  className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+                  className="group overflow-hidden rounded-3xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                 >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={600}
-                    height={350}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="h-44 w-full object-cover"
-                  />
 
-                  <div className="p-4">
-                    <span className="text-[11px] font-semibold text-orange-500">
-                      {item.category}
-                    </span>
+                  <div className="overflow-hidden">
 
-                    <h3 className="mt-2 line-clamp-3 text-sm font-bold">
-                      {item.title}
-                    </h3>
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={600}
+                      height={350}
+                      unoptimized
+                      loading="lazy"
+                      sizes="(max-width:768px) 100vw, 33vw"
+                      className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+
                   </div>
-                </Link>
-              ))}
 
-            </div>
+                  <div className="p-5">
 
-            {/* ARTICLE LIST */}
-            <div className="mt-10 space-y-5">
-
-              {articles.map((item: any) => (
-                <Link
-                  key={item.id}
-                  href={`/news/${item.slug}`}
-                  className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row"
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={300}
-                    height={180}
-                    sizes="(max-width: 768px) 100vw, 30vw"
-                    className="h-48 w-full rounded-xl object-cover sm:h-28 sm:w-44"
-                  />
-
-                  <div className="flex-1">
-                    <span className="text-[11px] font-semibold text-orange-500">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-orange-500">
                       {item.category}
                     </span>
 
-                    <h2 className="mt-1 text-base font-bold text-gray-900 sm:text-lg">
+                    <h2 className="mt-2 line-clamp-3 text-lg font-bold leading-7 text-gray-900">
                       {item.title}
                     </h2>
 
-                    <p className="mt-2 text-sm text-gray-600">
+                  </div>
+
+                </Link>
+              ))}
+
+            </div>
+
+            {/* ================================= ARTICLE LIST ================================= */}
+            <div className="mt-10 space-y-5">
+
+              {articles.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/news/${item.slug}`}
+                  className="group flex flex-col gap-4 rounded-3xl bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:flex-row"
+                >
+
+                  <div className="overflow-hidden rounded-2xl">
+
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={320}
+                      height={220}
+                      unoptimized
+                      loading="lazy"
+                      sizes="(max-width:768px) 100vw, 30vw"
+                      className="h-52 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-36 sm:w-52"
+                    />
+
+                  </div>
+
+                  <div className="flex-1">
+
+                    <span className="text-xs font-semibold uppercase tracking-wide text-orange-500">
+                      {item.category}
+                    </span>
+
+                    <h2 className="mt-2 text-lg font-black leading-7 text-gray-900">
+                      {item.title}
+                    </h2>
+
+                    <p className="mt-3 line-clamp-3 text-sm leading-7 text-gray-600">
                       {item.excerpt}
                     </p>
 
-                    <p className="mt-3 text-xs text-gray-400">
+                    <p className="mt-4 text-xs text-gray-400">
                       {item.date}
                     </p>
+
                   </div>
+
                 </Link>
               ))}
 
@@ -211,71 +301,90 @@ export default async function HomePage() {
 
           </section>
 
-          {/* ================= SIDEBAR ================= */}
+          {/* ================================= SIDEBAR ================================= */}
           <aside className="space-y-6 lg:col-span-4">
 
             {/* TRENDING */}
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
 
-              <h3 className="mb-4 text-lg font-bold">Trending</h3>
+              <h3 className="mb-5 text-xl font-black text-gray-900">
+                Trending News
+              </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
 
-                {posts.slice(0, 5).map((item: any, i: number) => (
-                  <Link
-                    key={item.id}
-                    href={`/news/${item.slug}`}
-                    className="flex items-start gap-4 border-b pb-4 last:border-none"
-                  >
-                    <span className="text-2xl font-bold text-gray-300">
-                      0{i + 1}
-                    </span>
+                {posts.slice(0, 5).map(
+                  (item, i) => (
+                    <Link
+                      key={item.id}
+                      href={`/news/${item.slug}`}
+                      className="flex items-start gap-4 border-b border-gray-100 pb-5 last:border-none"
+                    >
 
-                    <div>
-                      <p className="line-clamp-3 text-sm font-semibold text-gray-800">
-                        {item.title}
-                      </p>
+                      <span className="text-3xl font-black text-gray-200">
+                        0{i + 1}
+                      </span>
 
-                      <p className="mt-1 text-[11px] text-gray-400">
-                        {item.date}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                      <div>
+
+                        <h4 className="line-clamp-3 text-sm font-bold leading-6 text-gray-800">
+                          {item.title}
+                        </h4>
+
+                        <p className="mt-2 text-xs text-gray-400">
+                          {item.date}
+                        </p>
+
+                      </div>
+
+                    </Link>
+                  )
+                )}
 
               </div>
+
             </div>
 
-            {/* FEATURE VIDEO */}
-            {posts?.[2] && (
+            {/* FEATURE */}
+            {posts[2] && (
               <Link
                 href={`/news/${posts[2].slug}`}
-                className="overflow-hidden rounded-2xl bg-white shadow-sm"
+                className="group overflow-hidden rounded-3xl bg-white shadow-sm transition hover:shadow-md"
               >
-                <div className="relative">
+
+                <div className="relative overflow-hidden">
 
                   <Image
                     src={posts[2].image}
                     alt={posts[2].title}
                     width={800}
-                    height={400}
-                    sizes="(max-width: 768px) 100vw, 40vw"
-                    className="h-56 w-full object-cover"
+                    height={500}
+                    unoptimized
+                    loading="lazy"
+                    sizes="(max-width:768px) 100vw, 40vw"
+                    className="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
                   />
 
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-600">
+
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600/90 backdrop-blur">
+
                       <div className="ml-1 h-0 w-0 border-y-8 border-y-transparent border-l-[14px] border-l-white" />
+
                     </div>
+
                   </div>
 
                 </div>
 
-                <div className="p-4">
-                  <h3 className="line-clamp-3 font-bold">
+                <div className="p-5">
+
+                  <h3 className="line-clamp-3 text-lg font-bold leading-7 text-gray-900">
                     {posts[2].title}
                   </h3>
+
                 </div>
+
               </Link>
             )}
 

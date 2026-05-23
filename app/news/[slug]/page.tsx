@@ -1,55 +1,91 @@
 import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 const API = "https://mada.akarmusic.com/wp-json/wp/v2";
 
 /* =========================
-   FORMAT TANGGAL INDONESIA
+   ISR NEXT 16
+========================= */
+export const revalidate = 300;
+
+/* =========================
+   FORMAT TANGGAL
 ========================= */
 function formatTanggalIndonesia(dateString: string) {
-  return new Date(dateString).toLocaleDateString("id-ID", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  try {
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
 }
 
 /* =========================
-   BRAND ICONS (SAFE SVG)
+   CLEAN HTML
 ========================= */
-const FacebookIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-    <path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5C10.5 7 12 6 14.2 6c1 0 2 .1 2.3.1V9h-1.5c-1.2 0-1.5.6-1.5 1.4V12h3l-.5 3h-2.5v7A10 10 0 0 0 22 12z" />
-  </svg>
-);
-
-const XIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-    <path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.9-6.3L6 22H2.9l7.3-8.4L1 2h6.3l4.4 5.7L18.9 2z" />
-  </svg>
-);
-
-const ThreadsIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-    <path d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2zm.1 4.5c-2.6 0-4.6 1.3-5.3 3.5l2.3.7c.4-1.2 1.5-2 3-2 1.8 0 3 1 3 2.6v.6c-.9-.6-2-.9-3.3-.9-2.8 0-4.7 1.6-4.7 3.9 0 2.4 2 4 4.8 4 2.2 0 3.9-.9 4.8-2.4l-2-.9c-.5.9-1.5 1.4-2.8 1.4-1.6 0-2.7-.8-2.7-2s1.1-2 2.9-2c1.3 0 2.3.4 3 1.1V12c0-2.7-1.9-4.5-5.2-4.5z" />
-  </svg>
-);
+function stripHtml(html: string = "") {
+  return html.replace(/<[^>]*>?/gm, "").trim();
+}
 
 /* =========================
-   FETCH POST
+   FETCH DETAIL POST
 ========================= */
 async function getPost(slug: string) {
-  const res = await fetch(
-    `${API}/posts?slug=${encodeURIComponent(slug)}&_embed`,
-    { cache: "no-store" }
-  );
+  try {
+    const res = await fetch(
+      `${API}/posts?slug=${encodeURIComponent(slug)}&_embed`,
+      {
+        next: {
+          revalidate: 300,
+        },
+      }
+    );
 
-  const data = await res.json();
-  return Array.isArray(data) ? data[0] : null;
+    if (!res.ok) return null;
+
+    const data = await res.json();
+
+    return Array.isArray(data) ? data[0] : null;
+  } catch (error) {
+    console.error("DETAIL POST ERROR:", error);
+    return null;
+  }
 }
 
 /* =========================
-   SEO OPEN GRAPH
+   FETCH RELATED POSTS
+========================= */
+async function getRelatedPosts(currentId: number) {
+  try {
+    const res = await fetch(
+      `${API}/posts?_embed&per_page=5`,
+      {
+        next: {
+          revalidate: 300,
+        },
+      }
+    );
+
+    if (!res.ok) return [];
+
+    const data = await res.json();
+
+    return Array.isArray(data)
+      ? data.filter((item) => item.id !== currentId)
+      : [];
+  } catch (error) {
+    console.error("RELATED POSTS ERROR:", error);
+    return [];
+  }
+}
+
+/* =========================
+   METADATA SEO
 ========================= */
 export async function generateMetadata({
   params,
@@ -62,40 +98,51 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Berita tidak ditemukan",
+      title: "Berita Tidak Ditemukan | MES Jabar",
     };
   }
 
   const image =
-    post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+    post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    "/hero.jpg";
 
-  const title = post.title.rendered;
-  const description =
-    post.excerpt?.rendered?.replace(/<[^>]+>/g, "") || "";
+  const title = stripHtml(post?.title?.rendered);
+  const description = stripHtml(
+    post?.excerpt?.rendered || ""
+  ).slice(0, 160);
 
   return {
-    title,
+    title: `${title} | MES Jabar`,
     description,
+    alternates: {
+      canonical: `/news/${slug}`,
+    },
     openGraph: {
       title,
       description,
-      url: `https://your-domain.com/news/${slug}`,
+      url: `/news/${slug}`,
+      siteName: "MES Jabar",
+      locale: "id_ID",
       type: "article",
-      images: image
-        ? [{ url: image, width: 1200, height: 630 }]
-        : [],
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: image ? [image] : [],
+      images: [image],
     },
   };
 }
 
 /* =========================
-   PAGE DETAIL
+   PAGE
 ========================= */
 export default async function Page({
   params,
@@ -107,123 +154,205 @@ export default async function Page({
   const post = await getPost(slug);
 
   if (!post) {
-    return (
-      <div className="p-10 text-center">
-        <h1 className="text-xl font-bold text-red-500">
-          Berita tidak ditemukan
-        </h1>
-        <p className="text-gray-500 mt-2">Slug: {slug}</p>
-      </div>
-    );
+    notFound();
   }
 
-  const image =
-    post?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+  const relatedPosts = await getRelatedPosts(post.id);
 
-  const currentUrl = `https://your-domain.com/news/${slug}`;
-  const shareText = post.title.rendered;
+  const featuredMedia =
+    post?._embedded?.["wp:featuredmedia"]?.[0];
+
+  const image =
+    featuredMedia?.source_url || "/hero.jpg";
+
+  const imageCaption =
+    stripHtml(featuredMedia?.caption?.rendered || "") ||
+    stripHtml(post?.title?.rendered);
+
+  const title =
+    stripHtml(post?.title?.rendered) ||
+    "Tanpa Judul";
+
+  const content =
+    post?.content?.rendered || "";
+
+  const currentUrl = `https://yourdomain.com/news/${slug}`;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+    <main className="min-h-screen bg-[#f5f7f6]">
 
-      <article className="max-w-4xl mx-auto px-4 py-10">
+      {/* ================= HERO IMAGE ================= */}
+      <section className="relative">
 
-        <div className="h-[80px]" />
+        <div className="relative h-[240px] sm:h-[320px] lg:h-[500px] overflow-hidden">
 
-        {/* TITLE */}
-        <h1
-          className="text-3xl lg:text-4xl font-bold text-gray-900 leading-snug"
-          dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-        />
+          <Image
+            src={image}
+            alt={title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
 
-        {/* DATE */}
-        <div className="text-sm text-gray-600 mt-3 font-medium">
-          {formatTanggalIndonesia(post.date)}
-        </div>
-
-        {/* SHARE */}
-        <div className="flex flex-wrap gap-2 mt-5">
-
-          {/* WA */}
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(
-              shareText + " " + currentUrl
-            )}`}
-            target="_blank"
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-xl bg-green-500 text-white"
-          >
-            📱 WhatsApp
-          </a>
-
-          {/* FB */}
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
-            target="_blank"
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-xl bg-blue-600 text-white"
-          >
-            <FacebookIcon />
-            Facebook
-          </a>
-
-          {/* X */}
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              shareText
-            )}&url=${currentUrl}`}
-            target="_blank"
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-xl bg-black text-white"
-          >
-            <XIcon />
-            X
-          </a>
-
-          {/* THREADS */}
-          <a
-            href={`https://www.threads.net/intent/post?text=${encodeURIComponent(
-              shareText + " " + currentUrl
-            )}`}
-            target="_blank"
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-xl bg-purple-600 text-white"
-          >
-            <ThreadsIcon />
-            Threads
-          </a>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
         </div>
 
-        {/* IMAGE */}
-        {image && (
-          <div className="relative w-full h-[320px] lg:h-[420px] mt-6 rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src={image}
-              alt={post.title.rendered}
-              fill
-              className="object-cover"
-              priority
+      </section>
+
+     {/* ================= ARTICLE ================= */}
+<article className="relative z-10 mx-auto -mt-10 max-w-4xl rounded-[32px] bg-white px-5 py-7 shadow-xl sm:px-8 lg:px-10">
+
+  {/* TITLE */}
+  <h1
+    className="text-3xl font-black leading-tight text-gray-900 lg:text-5xl"
+    dangerouslySetInnerHTML={{
+      __html: post.title.rendered,
+    }}
+  />
+
+  {/* META */}
+  <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+
+    <span>
+      {formatTanggalIndonesia(post.date)}
+    </span>
+
+    <span>•</span>
+
+    <span>
+      MES Jawa Barat
+    </span>
+
+  </div>
+
+  {/* SHARE */}
+  <div className="mt-6 flex flex-wrap gap-3">
+
+    <a
+      href={`https://wa.me/?text=${encodeURIComponent(
+        `${title} ${currentUrl}`
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700"
+    >
+      WhatsApp
+    </a>
+
+    <a
+      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        title
+      )}&url=${currentUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white"
+    >
+      X
+    </a>
+
+    <a
+      href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+    >
+      Facebook
+    </a>
+
+  </div>
+
+  {/* FEATURE IMAGE */}
+  <div className="relative mt-8 overflow-hidden rounded-3xl">
+
+    <Image
+      src={image}
+      alt={title}
+      width={1200}
+      height={700}
+      priority
+      sizes="100vw"
+      className="h-auto w-full object-cover"
+    />
+
+  </div>
+
+  {/* CAPTION */}
+  {imageCaption && (
+    <div className="mt-3 text-center text-xs italic text-gray-500">
+      Foto: {imageCaption}
+    </div>
+  )}
+
+  {/* CONTENT */}
+  <div
+    className="
+      prose prose-lg mt-10 max-w-none text-gray-700
+      prose-headings:text-gray-900
+      prose-headings:font-bold
+      prose-p:leading-8
+      prose-p:text-gray-700
+      prose-a:text-green-700
+      prose-img:rounded-2xl
+      prose-img:shadow-md
+      prose-strong:text-gray-900
+      prose-blockquote:border-green-600
+      prose-blockquote:text-gray-700
+      prose-li:marker:text-green-700
+    "
+    dangerouslySetInnerHTML={{
+      __html: content,
+    }}
+  />
+
+  {/* ================= BACA JUGA ================= */}
+  {relatedPosts.length > 0 && (
+    <section className="mt-14 border-t border-gray-200 pt-10">
+
+      <div className="mb-6 flex items-center gap-3">
+
+        <div className="h-8 w-1 rounded-full bg-green-700" />
+
+        <h2 className="text-2xl font-black text-gray-900">
+          Baca Juga
+        </h2>
+
+      </div>
+
+      <div className="space-y-5">
+
+        {relatedPosts.slice(0, 2).map((item: any) => (
+
+          <Link
+            key={item.id}
+            href={`/news/${item.slug}`}
+            className="group block rounded-2xl border border-gray-100 bg-gray-50 p-5 transition hover:border-green-200 hover:bg-white hover:shadow-md"
+          >
+
+            <h3
+              className="text-lg font-bold leading-snug text-gray-900 transition group-hover:text-green-700"
+              dangerouslySetInnerHTML={{
+                __html:
+                  item?.title?.rendered ||
+                  "Tanpa Judul",
+              }}
             />
-          </div>
-        )}
 
-        {/* CONTENT */}
-        <div
-          className="mt-8 prose max-w-none text-gray-700  [&>*]:mb-4
-            [&>p]:mb-5
+            <p className="mt-2 text-sm text-gray-500">
+              {formatTanggalIndonesia(item.date)}
+            </p>
 
-            [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold
-            [&>h3]:mt-6 [&>h3]:mb-3 [&>h3]:text-xl [&>h3]:font-semibold
+          </Link>
 
-            [&>ul]:mb-5 [&>ul]:pl-5 [&>ul]:list-disc
-            [&>ol]:mb-5 [&>ol]:pl-5 [&>ol]:list-decimal
+        ))}
 
-            [&_img]:rounded-xl
-            [&_img]:w-full
+      </div>
 
-            [&>p>a]:text-orange-500 [&>p>a]:underline
-          "
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
-        />
+    </section>
+  )}
 
-      </article>
+</article>
 
     </main>
   );

@@ -1,82 +1,121 @@
-const API = "https://mada.akarmusic.com/wp-json/wp/v2";
+const API =
+  process.env.NEXT_PUBLIC_WORDPRESS_API ||
+  "https://mada.akarmusic.com/wp-json/wp/v2";
 
 /**
- * Latest Posts
+ * Helper Fetch
  */
-export async function getPosts() {
+async function fetchAPI(
+  endpoint: string,
+  options?: RequestInit
+) {
   try {
     const res = await fetch(
-      `${API}/posts?_embed&per_page=3`,
-      {
-        cache: "force-cache",
-      }
+      `${API}${endpoint}`,
+      options
     );
 
     if (!res.ok) {
-      return [];
+      throw new Error(
+        `Fetch error: ${res.status}`
+      );
     }
 
     return await res.json();
   } catch (error) {
-    console.error("GET POSTS ERROR:", error);
-    return [];
+    console.error("WORDPRESS API ERROR:", error);
+    return null;
   }
+}
+
+/**
+ * Latest Posts
+ */
+export async function getPosts(
+  limit = 6
+) {
+  const data = await fetchAPI(
+    `/posts?_embed&per_page=${limit}`,
+    {
+      next: {
+        revalidate: 3600,
+      },
+    }
+  );
+
+  return data || [];
+}
+
+/**
+ * Detail Post by Slug
+ */
+export async function getPostBySlug(
+  slug: string
+) {
+  const data = await fetchAPI(
+    `/posts?slug=${slug}&_embed`,
+    {
+      next: {
+        revalidate: 3600,
+      },
+    }
+  );
+
+  return data?.[0] || null;
+}
+
+/**
+ * Search Posts
+ */
+export async function searchPosts(
+  keyword: string
+) {
+  if (!keyword) return [];
+
+  const data = await fetchAPI(
+    `/posts?search=${encodeURIComponent(
+      keyword
+    )}&_embed&per_page=20`,
+    {
+      next: {
+        revalidate: 300,
+      },
+    }
+  );
+
+  return data || [];
 }
 
 /**
  * Direktori Pakar
  */
 export async function getPakar() {
-  try {
-    const res = await fetch(
-      `${API}/pakar?per_page=100`,
-      {
-        next: {
-          revalidate: 60,
-        },
-      }
-    );
-
-    if (!res.ok) {
-      return [];
+  const data = await fetchAPI(
+    `/pakar?per_page=100`,
+    {
+      next: {
+        revalidate: 300,
+      },
     }
+  );
 
-    return await res.json();
-  } catch (error) {
-    console.error("GET PAKAR ERROR:", error);
-    return [];
-  }
+  return data || [];
 }
 
 /**
- * Detail Pakar by Slug
+ * Detail Pakar
  */
 export async function getPakarBySlug(
   slug: string
 ) {
-  try {
-    const res = await fetch(
-      `${API}/pakar?slug=${slug}`,
-      {
-        next: {
-          revalidate: 60,
-        },
-      }
-    );
-
-    if (!res.ok) {
-      return null;
+  const data = await fetchAPI(
+    `/pakar?slug=${slug}`,
+    {
+      next: {
+        revalidate: 300,
+      },
     }
+  );
 
-    const data = await res.json();
-
-    return data[0] || null;
-  } catch (error) {
-    console.error(
-      "GET DETAIL PAKAR ERROR:",
-      error
-    );
-
-    return null;
-  }
+  return data?.[0] || null;
 }
