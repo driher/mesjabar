@@ -101,28 +101,7 @@ export default async function DetailPakar({
     avatar;
 
   return (
-    <async function getPakar(key: string) {
-  try {
-    const isId = !isNaN(Number(key));
-
-    const url = isId
-      ? `https://mada.akarmusic.com/wp-json/wp/v2/pakar/${key}?_embed`
-      : `https://mada.akarmusic.com/wp-json/wp/v2/pakar?slug=${key}&_embed`;
-
-    const res = await fetch(url, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-
-    return isId ? data : data?.[0] || null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-} className="min-h-screen bg-gray-50 py-10">
+    <div className="min-h-screen bg-gray-50 py-10">
 
       <div className="max-w-6xl mx-auto px-4">
 
