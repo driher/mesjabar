@@ -20,8 +20,15 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "auto";
-  }, [open]);
+  if (open) {
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = "0px";
+  } else {
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  }
+}, [open]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -87,39 +94,38 @@ export default function Navbar() {
       </div>
 
       {/* MOBILE MENU */}
-    {open && (
-  <div className="lg:hidden fixed inset-0 top-16 z-[99999] bg-white overflow-y-auto">
-    
-    <div className="flex flex-col gap-2 px-4 py-4 text-sm font-medium">
+ {open && (
+  <div className="fixed inset-0 top-16 z-[999999] bg-white opacity-100">
 
-      {menus.map((item) => (
+    <div className="relative z-[999999] flex flex-col gap-2 p-4 bg-white">
+
+     {menus.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           onClick={() => setOpen(false)}
-          className="block w-full rounded-lg px-3 py-3 text-gray-700 transition hover:bg-gray-100 hover:text-green-700"
+          className="block rounded-lg px-3 py-3 text-black bg-gray-100 hover:bg-gray-200"
         >
           {item.label}
         </Link>
       ))}
 
-      <div className="mt-3 flex gap-3 border-t pt-4">
-
-        <button className="rounded-full p-2 hover:bg-gray-100">
+      <div className="mt-4 border-t pt-4 flex gap-3">
+        <button className="p-2 rounded-full bg-gray-200">
           <Search size={18} />
         </button>
 
-        <button className="rounded-full p-2 hover:bg-gray-100">
+        <button className="p-2 rounded-full bg-gray-200">
           <Bell size={18} />
         </button>
 
-        <button className="w-full rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white">
+        <button className="w-full bg-green-700 text-white py-2 rounded-xl">
           Login / Daftar
         </button>
-
       </div>
 
     </div>
+
   </div>
 )}
     </header>
