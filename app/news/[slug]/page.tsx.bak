@@ -201,162 +201,158 @@ export default async function Page({
 
       </section>
 
-      {/* ================= ARTICLE ================= */}
-      <article className="relative z-10 mx-auto -mt-10 max-w-4xl rounded-[32px] bg-white px-5 py-7 shadow-xl sm:px-8 lg:px-10">
+     {/* ================= ARTICLE ================= */}
+<article className="relative z-10 mx-auto -mt-10 max-w-4xl rounded-[32px] bg-white px-5 py-7 shadow-xl sm:px-8 lg:px-10">
 
-        {/* FEATURE IMAGE DALAM ARTIKEL */}
-<div className="relative mt-8 overflow-hidden rounded-3xl">
-
-  <Image
-    src={image}
-    alt={title}
-    width={1200}
-    height={700}
-    priority
-    className="h-auto w-full object-cover"
+  {/* TITLE */}
+  <h1
+    className="text-3xl font-black leading-tight text-gray-900 lg:text-5xl"
+    dangerouslySetInnerHTML={{
+      __html: post.title.rendered,
+    }}
   />
 
-</div>
+  {/* META */}
+  <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-gray-500">
 
-{/* CAPTION */}
-{imageCaption && (
-  <div className="mt-3 text-center text-xs italic text-gray-500">
-    {imageCaption}
+    <span>
+      {formatTanggalIndonesia(post.date)}
+    </span>
+
+    <span>•</span>
+
+    <span>
+      MES Jawa Barat
+    </span>
+
   </div>
-)}
 
-{/* CONTENT */}
-<div
-  className="
-    prose prose-lg mt-10 max-w-none text-gray-700
+  {/* SHARE */}
+  <div className="mt-6 flex flex-wrap gap-3">
 
-        {/* TITLE */}
-        <h1
-          className="text-3xl font-black leading-tight text-gray-900 lg:text-5xl"
-          dangerouslySetInnerHTML={{
-            __html: post.title.rendered,
-          }}
-        />
+    <a
+      href={`https://wa.me/?text=${encodeURIComponent(
+        `${title} ${currentUrl}`
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700"
+    >
+      WhatsApp
+    </a>
 
-        {/* META */}
-        <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+    <a
+      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        title
+      )}&url=${currentUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white"
+    >
+      X
+    </a>
 
-          <span>
-            {formatTanggalIndonesia(post.date)}
-          </span>
+    <a
+      href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+    >
+      Facebook
+    </a>
 
-          <span>•</span>
+  </div>
 
-          <span>
-            MES Jawa Barat
-          </span>
+  {/* FEATURE IMAGE */}
+  <div className="relative mt-8 overflow-hidden rounded-3xl">
 
-        </div>
+    <Image
+      src={image}
+      alt={title}
+      width={1200}
+      height={700}
+      priority
+      sizes="100vw"
+      className="h-auto w-full object-cover"
+    />
 
-        {/* SHARE */}
-        <div className="mt-6 flex flex-wrap gap-3">
+  </div>
 
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(
-              `${title} ${currentUrl}`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700"
+  {/* CAPTION */}
+  {imageCaption && (
+    <div className="mt-3 text-center text-xs italic text-gray-500">
+      Foto: {imageCaption}
+    </div>
+  )}
+
+  {/* CONTENT */}
+  <div
+    className="
+      prose prose-lg mt-10 max-w-none text-gray-700
+      prose-headings:text-gray-900
+      prose-headings:font-bold
+      prose-p:leading-8
+      prose-p:text-gray-700
+      prose-a:text-green-700
+      prose-img:rounded-2xl
+      prose-img:shadow-md
+      prose-strong:text-gray-900
+      prose-blockquote:border-green-600
+      prose-blockquote:text-gray-700
+      prose-li:marker:text-green-700
+    "
+    dangerouslySetInnerHTML={{
+      __html: content,
+    }}
+  />
+
+  {/* ================= BACA JUGA ================= */}
+  {relatedPosts.length > 0 && (
+    <section className="mt-14 border-t border-gray-200 pt-10">
+
+      <div className="mb-6 flex items-center gap-3">
+
+        <div className="h-8 w-1 rounded-full bg-green-700" />
+
+        <h2 className="text-2xl font-black text-gray-900">
+          Baca Juga
+        </h2>
+
+      </div>
+
+      <div className="space-y-5">
+
+        {relatedPosts.slice(0, 2).map((item: any) => (
+
+          <Link
+            key={item.id}
+            href={`/news/${item.slug}`}
+            className="group block rounded-2xl border border-gray-100 bg-gray-50 p-5 transition hover:border-green-200 hover:bg-white hover:shadow-md"
           >
-            WhatsApp
-          </a>
 
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              title
-            )}&url=${currentUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white"
-          >
-            X
-          </a>
+            <h3
+              className="text-lg font-bold leading-snug text-gray-900 transition group-hover:text-green-700"
+              dangerouslySetInnerHTML={{
+                __html:
+                  item?.title?.rendered ||
+                  "Tanpa Judul",
+              }}
+            />
 
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
-          >
-            Facebook
-          </a>
+            <p className="mt-2 text-sm text-gray-500">
+              {formatTanggalIndonesia(item.date)}
+            </p>
 
-        </div>
+          </Link>
 
-        {/* CONTENT */}
-        <div
-          className="
-            prose prose-lg mt-10 max-w-none text-gray-700
-            prose-headings:text-gray-900
-            prose-headings:font-bold
-            prose-p:leading-8
-            prose-p:text-gray-700
-            prose-a:text-green-700
-            prose-img:rounded-2xl
-            prose-img:shadow-md
-            prose-strong:text-gray-900
-            prose-blockquote:border-green-600
-            prose-blockquote:text-gray-700
-            prose-li:marker:text-green-700
-          "
-          dangerouslySetInnerHTML={{
-            __html: content,
-          }}
-        />
+        ))}
 
-        {/* ================= BACA JUGA ================= */}
-        {relatedPosts.length > 0 && (
-          <section className="mt-14 border-t border-gray-200 pt-10">
+      </div>
 
-            <div className="mb-6 flex items-center gap-3">
+    </section>
+  )}
 
-              <div className="h-8 w-1 rounded-full bg-green-700" />
-
-              <h2 className="text-2xl font-black text-gray-900">
-                Baca Juga
-              </h2>
-
-            </div>
-
-            <div className="space-y-5">
-
-              {relatedPosts.slice(0, 2).map((item: any) => (
-
-                <Link
-                  key={item.id}
-                  href={`/news/${item.slug}`}
-                  className="group block rounded-2xl border border-gray-100 bg-gray-50 p-5 transition hover:border-green-200 hover:bg-white hover:shadow-md"
-                >
-
-                  <h3
-                    className="text-lg font-bold leading-snug text-gray-900 transition group-hover:text-green-700"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        item?.title?.rendered ||
-                        "Tanpa Judul",
-                    }}
-                  />
-
-                  <p className="mt-2 text-sm text-gray-500">
-                    {formatTanggalIndonesia(item.date)}
-                  </p>
-
-                </Link>
-
-              ))}
-
-            </div>
-
-          </section>
-        )}
-
-      </article>
+</article>
 
     </main>
   );

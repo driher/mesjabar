@@ -300,6 +300,19 @@ export default async function Page({
       prose-blockquote:border-green-600
       prose-blockquote:text-gray-700
       prose-li:marker:text-green-700
+      [&>*]:mb-4
+            [&>p]:mb-5
+
+            [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold
+            [&>h3]:mt-6 [&>h3]:mb-3 [&>h3]:text-xl [&>h3]:font-semibold
+
+            [&>ul]:mb-5 [&>ul]:pl-5 [&>ul]:list-disc
+            [&>ol]:mb-5 [&>ol]:pl-5 [&>ol]:list-decimal
+
+            [&_img]:rounded-xl
+            [&_img]:w-full
+
+            [&>p>a]:text-orange-500 [&>p>a]:underline
     "
     dangerouslySetInnerHTML={{
       __html: content,
