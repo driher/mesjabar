@@ -1,0 +1,31 @@
+"use client";
+
+import Script from "next/script";
+
+export default function GoogleTranslate() {
+  return (
+    <>
+      <div id="google_translate_element" />
+
+      <Script id="google-translate">
+        {`
+          function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+              {
+                pageLanguage: 'id',
+                includedLanguages: 'id,en,ar,fr,de,ja,ko,zh-CN',
+                autoDisplay: false
+              },
+              'google_translate_element'
+            );
+          }
+        `}
+      </Script>
+
+      <Script
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        strategy="afterInteractive"
+      />
+    </>
+  );
+}

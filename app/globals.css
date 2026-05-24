@@ -28,3 +28,51 @@ body {
 html {
   scrollbar-gutter: stable;
 }
+
+/* =========================
+   GOOGLE TRANSLATE PREMIUM
+========================= */
+
+.goog-te-gadget {
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-gadget select {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  color: #111 !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  backdrop-filter: blur(10px);
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+iframe.skiptranslate {
+  display: none !important;
+}
+
+.translate-wrapper {
+  display: flex;
+  align-items: center;
+}
+
