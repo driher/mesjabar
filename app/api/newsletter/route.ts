@@ -1,37 +1,60 @@
-import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
-
-// Masukkan API Key dari resend.com ke file .env.local Anda
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export async function POST(request: Request) {
   try {
     const { email } = await request.json();
 
     if (!email) {
-      return NextResponse.json({ error: 'Email wajib diisi' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email wajib diisi" },
+        { status: 400 }
+      );
     }
 
-    // 1. KIRIM EMAIL KE USER
+    // Cek API Key saat request
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "RESEND_API_KEY belum dikonfigurasi" },
+        { status: 500 }
+      );
+    }
+
+    const resend = new Resend(apiKey);
+
+    // Email ke subscriber
     await resend.emails.send({
-      from: 'MES Jawa Barat <no-reply@mesjabar.or.id>', // Harus pakai domain resmi Anda nanti
+      from: "MES Jawa Barat <no-reply@ekonomisyariahjabar.id>",
       to: email,
-      subject: 'Konfirmasi Langganan Newsletter MES Jabar',
-      html: '<p>Terima kasih telah bergabung! Anda akan menerima update ekonomi syariah terbaru dari kami.</p>',
+      subject: "Konfirmasi Langganan Newsletter MES Jabar",
+      html: `
+        <p>Terima kasih telah bergabung!</p>
+        <p>Anda akan menerima update ekonomi syariah terbaru dari kami.</p>
+      `,
     });
 
-    // 2. KIRIM EMAIL NOTIFIKASI KE ADMIN
+    // Email ke admin
     await resend.emails.send({
-      from: 'Sistem Website <system@mesjabar.or.id>',
-      to: 'admin@mesjabar.or.id', // Email Admin MES Jabar
-      subject: '🚨 Pendaftar Newsletter Baru!',
-      html: `<p>Halo Admin, ada user baru yang mendaftar newsletter dengan email: <b>${email}</b></p>`,
+      from: "Sistem Website <system@ekonomisyariahjabar.id>",
+      to: "admin@ekonomisyariahjabar.id",
+      subject: "Pendaftar Newsletter Baru",
+      html: `
+        <p>Ada subscriber baru:</p>
+        <p><strong>${email}</strong></p>
+      `,
     });
 
-    // (Opsional) Langkah 3: Simpan email ke Database Anda di sini...
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Gagal memproses permintaan' }, { status: 500 });
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Gagal memproses permintaan" },
+      { status: 500 }
+    );
   }
 }
