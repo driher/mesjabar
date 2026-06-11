@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "mada.akarmusic.com",
+        hostname: "cms.ekonomisyariahjabar.id",
+	pathname: "/wp-content/uploads/**",
       },
       {
         protocol: "https",
@@ -42,5 +43,7 @@ const nextConfig: NextConfig = {
     ],
   },
 };
+
+
 
 export default nextConfig;

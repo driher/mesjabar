@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const API =
-  "https://mada.akarmusic.com/wp-json/wp/v2/agenda?per_page=3&_fields=id,slug,title,acf";
+  "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/agenda?per_page=3&_fields=id,slug,title,acf";
 
 async function getAgenda() {
   try {

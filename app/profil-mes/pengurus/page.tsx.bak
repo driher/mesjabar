@@ -1,0 +1,70 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+async function getPengurus(slug: string) {
+  const res = await fetch(
+    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pengurus?_embed=1&per_page=100",
+    { cache: "no-store" }
+  );
+
+  const data = await res.json();
+
+  // 🔥 FILTER MANUAL SLUG (INI PALING AMAN)
+  return data.find((item: any) => item.slug === slug) || null;
+}
+
+export default async function Page({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const pengurus = await getPengurus(params.slug);
+
+  if (!pengurus) return notFound();
+
+  const nama = pengurus?.title?.rendered;
+  const bio = pengurus?.content?.rendered;
+
+  const foto =
+    pengurus?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    "/no-image.png";
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-10">
+
+      {/* HEADER */}
+      <div className="bg-gradient-to-r from-green-700 to-emerald-600 text-white p-6 rounded-xl mb-8">
+        <h1 className="text-3xl font-bold">{nama}</h1>
+        <p className="opacity-80">Profil Pengurus MES Jawa Barat</p>
+      </div>
+
+      {/* GRID */}
+      <div className="grid md:grid-cols-3 gap-8">
+
+        {/* FOTO */}
+        <div>
+          <div className="relative w-full h-[320px] rounded-xl overflow-hidden">
+            <Image
+              src={foto}
+              alt={nama}
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {/* BIO */}
+        <div className="md:col-span-2">
+          <article
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: bio || "<p>Data belum tersedia</p>",
+            }}
+          />
+        </div>
+
+      </div>
+
+    </main>
+  );
+}

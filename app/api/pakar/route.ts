@@ -1,7 +1,7 @@
 export async function GET() {
   try {
     const res = await fetch(
-      "https://mada.akarmusic.com/wp-json/wp/v2/pakar?per_page=100&_embed",
+      "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pakar?per_page=100&_embed",
       {
         cache: "no-store",
       }

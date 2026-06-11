@@ -1,6 +1,6 @@
 const API =
   process.env.NEXT_PUBLIC_WORDPRESS_API ||
-  "https://mada.akarmusic.com/wp-json/wp/v2";
+  "https://mcms.ekonomisyariahjabar.id/wp-json/wp/v2";
 
 /**
  * Helper Fetch

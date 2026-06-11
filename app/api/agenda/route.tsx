@@ -3,7 +3,7 @@ export async function GET() {
   try {
 
     const res = await fetch(
-      "https://mada.akarmusic.com/wp-json/wp/v2/agenda?_embed",
+      "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/agenda?_embed",
       {
         cache: "no-store",
       }

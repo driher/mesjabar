@@ -1,0 +1,108 @@
+import Link from "next/link";
+
+const API =
+  "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/program?per_page=100";
+
+async function getProgram() {
+  try {
+    const res = await fetch(API, {
+      next: {
+        revalidate: 300,
+      },
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Program error:", error);
+    return [];
+  }
+}
+
+function excerpt(html: string, length = 180) {
+  const text = html.replace(/<[^>]+>/g, "").trim();
+
+  if (text.length <= length) {
+    return text;
+  }
+
+  return text.substring(0, length) + "...";
+}
+
+export default async function ProgramPage() {
+  const programs = await getProgram();
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 py-10">
+
+      {/* HERO */}
+      <section className="rounded-3xl bg-gradient-to-r from-green-700 to-emerald-600 p-8 md:p-12 text-white mb-10">
+
+        <span className="inline-block bg-white/20 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+          PROGRAM STRATEGIS
+        </span>
+
+        <h1 className="text-4xl md:text-5xl font-black">
+          Program MES Jawa Barat
+        </h1>
+
+        <p className="mt-4 text-green-50 max-w-3xl">
+          Program strategis Masyarakat Ekonomi Syariah Jawa Barat
+          dalam mendorong penguatan ekosistem ekonomi dan keuangan
+          syariah yang inklusif, berkelanjutan, dan berdampak bagi masyarakat.
+        </p>
+
+      </section>
+
+      {/* EMPTY */}
+      {programs.length === 0 && (
+        <div className="rounded-3xl bg-white p-8 shadow-sm text-center text-slate-500">
+          Data program belum tersedia.
+        </div>
+      )}
+
+      {/* GRID */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+        {programs.map((item: any) => (
+          <Link
+            key={item.id}
+            href={`/program/${item.slug}`}
+            className="group bg-white rounded-3xl border border-slate-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
+          >
+            {/* ICON */}
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-green-700 text-2xl">
+              📘
+            </div>
+
+            {/* TITLE */}
+            <h2
+              className="text-xl font-bold text-slate-800 group-hover:text-green-700 transition"
+              dangerouslySetInnerHTML={{
+                __html: item?.title?.rendered || "Tanpa Judul",
+              }}
+            />
+
+            {/* EXCERPT */}
+            <p className="mt-4 text-sm leading-6 text-slate-600 line-clamp-5">
+              {excerpt(item?.content?.rendered || "")}
+            </p>
+
+            {/* BUTTON */}
+            <div className="mt-6">
+              <span className="inline-flex items-center text-green-700 font-semibold text-sm">
+                Lihat Program →
+              </span>
+            </div>
+
+          </Link>
+        ))}
+
+      </div>
+
+    </main>
+  );
+}

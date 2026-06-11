@@ -1,0 +1,96 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+const API =
+  "https://cms.ekonomisyariahjabar.id/?rest_route=/wp/v2";
+
+async function getPage(slug: string) {
+  const res = await fetch(
+    `${API}/pages?slug=${slug}&_embed`,
+    {
+      next: {
+        revalidate: 300,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  return data?.[0];
+}
+
+export default async function ProfilPage({
+  params,
+}: {
+  params: Promise<{
+    slug: string;
+  }>;
+}) {
+  const { slug } = await params;
+
+  const page = await getPage(slug);
+
+  if (!page) {
+    notFound();
+  }
+
+  const featuredImage =
+    page?._embedded?.[
+      "wp:featuredmedia"
+    ]?.[0]?.source_url || null;
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-10">
+
+      <h1 className="text-4xl font-black mb-8 text-gray-900">
+        {page.title.rendered}
+      </h1>
+
+      {featuredImage && (
+        <div className="mb-8 overflow-hidden rounded-3xl">
+
+          <Image
+            src={featuredImage}
+            alt={page.title.rendered}
+            width={1200}
+            height={700}
+            priority
+            unoptimized
+            className="
+              w-full
+              h-auto
+              object-cover
+            "
+          />
+
+        </div>
+      )}
+
+      <article
+        className="
+          prose
+          prose-lg
+          max-w-none
+
+          [&_img]:rounded-2xl
+          [&_img]:shadow-sm
+
+          [&_h2]:font-bold
+          [&_h2]:mt-10
+
+          [&_h3]:font-semibold
+
+          [&_p]:leading-8
+
+          [&_ul]:leading-8
+          [&_ol]:leading-8
+        "
+        dangerouslySetInnerHTML={{
+          __html:
+            page.content.rendered,
+        }}
+      />
+
+    </main>
+  );
+}

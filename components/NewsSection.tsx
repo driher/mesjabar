@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const API =
-  "https://mada.akarmusic.com/wp-json/wp/v2/posts?_embed&per_page=3";
+  "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/posts?_embed&per_page=3";
 
 async function getPosts() {
   try {

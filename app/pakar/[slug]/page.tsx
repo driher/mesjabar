@@ -11,7 +11,7 @@ interface PageProps {
  */
 async function getPakarBySlug(slug: string) {
   const res = await fetch(
-    `https://mada.akarmusic.com/wp-json/wp/v2/pakar?slug=${slug}&_embed`,
+    `https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pakar?slug=${slug}&_embed`,
     {
       cache: "no-store",
     }
