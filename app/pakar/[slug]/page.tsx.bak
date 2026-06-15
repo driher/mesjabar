@@ -1,3 +1,4 @@
+```tsx
 import { notFound } from "next/navigation";
 
 interface PageProps {
@@ -289,4 +290,4 @@ export default async function DetailPakar({
     </div>
   );
 }
-
+```
