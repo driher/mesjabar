@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 async function getPosts() {
   try {
     const res = await fetch(
-      `${API}/posts?_embed&categories=4&per_page=20&orderby=date&order=desc`,
+      `${API}/posts?_embed&per_page=10`,
       {
         next: {
           revalidate: 300,
@@ -51,9 +51,17 @@ async function getPosts() {
       return [];
     }
 
-    return await res.json();
+    const data = await res.json();
+
+    return Array.isArray(data)
+      ? data
+      : [];
   } catch (error) {
-    console.error("GET POSTS ERROR:", error);
+    console.error(
+      "GET POSTS ERROR:",
+      error
+    );
+
     return [];
   }
 }

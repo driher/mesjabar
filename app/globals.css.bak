@@ -76,17 +76,3 @@ iframe.skiptranslate {
   align-items: center;
 }
 
-.swiper-button-prev,
-.swiper-button-next {
-  color: #fff !important;
-  background: rgba(0,0,0,.5);
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 9999px;
-}
-
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  font-size: 20px !important;
-}
-

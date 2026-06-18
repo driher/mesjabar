@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 async function getProfile() {
   const res = await fetch(
-    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pages?slug=profil-mes",
+    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pages?slug=profil-masyarakat-ekonomi-syariah-mes-jawa-barat",
     {
       next: { revalidate: 300 },
     }
