@@ -1,70 +1,118 @@
+import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 
-async function getPengurus(slug: string) {
+async function getPengurus() {
   const res = await fetch(
     "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pengurus?_embed=1&per_page=100",
     { cache: "no-store" }
   );
 
   const data = await res.json();
-
-  // 🔥 FILTER MANUAL SLUG (INI PALING AMAN)
-  return data.find((item: any) => item.slug === slug) || null;
+  return data || [];
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const pengurus = await getPengurus(params.slug);
+export default async function PengurusPage() {
+  const data = await getPengurus();
 
-  if (!pengurus) return notFound();
+  // =========================
+  // GROUP BY KATEGORI (fallback jika tidak ada ACF)
+  // =========================
+  const grouped = data.reduce((acc: any, item: any) => {
+    const kategori =
+      item?.acf?.kategori ||
+      item?.categories?.[0] ||
+      "Pengurus";
 
-  const nama = pengurus?.title?.rendered;
-  const bio = pengurus?.content?.rendered;
+    if (!acc[kategori]) acc[kategori] = [];
+    acc[kategori].push(item);
 
-  const foto =
-    pengurus?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    "/no-image.png";
+    return acc;
+  }, {});
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-10">
+    <main className="max-w-6xl mx-auto px-4 py-10">
 
-      {/* HEADER */}
-      <div className="bg-gradient-to-r from-green-700 to-emerald-600 text-white p-6 rounded-xl mb-8">
-        <h1 className="text-3xl font-bold">{nama}</h1>
-        <p className="opacity-80">Profil Pengurus MES Jawa Barat</p>
+      {/* =========================
+          HEADER PAGE
+      ========================= */}
+      <section className="text-center mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold">
+          Struktur Pengurus
+        </h1>
+        <p className="text-gray-500 mt-2">
+          Ekonomi Syariah Jawa Barat
+        </p>
+      </section>
+
+      {/* =========================
+          LIST KATEGORI
+      ========================= */}
+      <div className="space-y-12">
+
+        {Object.keys(grouped).map((kategori) => (
+          <section key={kategori}>
+
+            {/* KATEGORI TITLE */}
+            <h2 className="text-xl font-semibold mb-6 border-l-4 border-green-600 pl-3">
+              {kategori}
+            </h2>
+
+            {/* GRID PENGURUS */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+              {grouped[kategori].map((item: any) => {
+                const image =
+                  item?._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={`pengurus/${item.slug}`}
+                    className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden group"
+                  >
+{/* JABATAN */}
+  <div className="py-3 px-4 text-center border-b">
+    <h4 className="font-black text-xl uppercase text-gray-900">
+      {item.jabatan_organisasi}
+    </h4>
+  </div>
+
+                    {/* FOTO */}
+                    <div className="relative w-full h-[220px] bg-gray-100">
+                      <Image
+                        src={image || "/no-image.png"}
+                        alt={item.title?.rendered}
+                        fill
+                        className="object-cover group-hover:scale-105 transition"
+                      />
+                    </div>
+
+                    {/* INFO */}
+                    <div className="p-4 text-center">
+
+                      <h3 className="font-semibold text-gray-800 group-hover:text-green-700 transition">
+                        {item.title?.rendered}
+                      </h3>
+
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                        {item.excerpt?.rendered?.replace(/<[^>]*>/g, "")}
+                      </p>
+
+                      <span className="inline-block mt-3 text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                        Lihat Profil
+                      </span>
+
+                    </div>
+
+                  </Link>
+                );
+              })}
+
+            </div>
+          </section>
+        ))}
+
       </div>
-
-      {/* GRID */}
-      <div className="grid md:grid-cols-3 gap-8">
-
-        {/* FOTO */}
-        <div>
-          <div className="relative w-full h-[320px] rounded-xl overflow-hidden">
-            <Image
-              src={foto}
-              alt={nama}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-
-        {/* BIO */}
-        <div className="md:col-span-2">
-          <article
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: bio || "<p>Data belum tersedia</p>",
-            }}
-          />
-        </div>
-
-      </div>
-
     </main>
   );
 }
