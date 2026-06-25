@@ -86,7 +86,7 @@ export default async function PengurusPage() {
                 return (
                   <Link
                     key={item.id}
-                    href={`/pengurus/${item.id}/${item.slug}`}
+                    href={`/profil-mes/pengurus/${item.id}/${item.slug}`}
                     className="group block bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition"
                   >
 

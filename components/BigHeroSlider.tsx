@@ -100,7 +100,6 @@ export default function BigHeroSlider() {
 
           return (
             <SwiperSlide key={post.id}>
-              <Link href={`/berita/${post.slug}`}>
                 <div className="relative w-full h-full cursor-pointer">
                   <Image
                     src={image}
@@ -137,7 +136,7 @@ export default function BigHeroSlider() {
                     </div>
                   </div>
                 </div>
-              </Link>
+             
             </SwiperSlide>
           );
         })}
