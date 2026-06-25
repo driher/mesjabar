@@ -1,0 +1,60 @@
+import Image from "next/image";
+import { notFound, redirect } from "next/navigation";
+import { getPengurusById } from "@/lib/pengurus";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string; slug: string }>;
+}) {
+  const { id, slug } = await params;
+
+  const data = await getPengurusById(id);
+
+  if (!data) {
+    notFound();
+  }
+
+  const correctSlug =
+    data.slug ||
+    data.title?.rendered
+      ?.toLowerCase()
+      ?.replace(/\s+/g, "-");
+
+  if (correctSlug && slug !== correctSlug) {
+    redirect(`/pengurus/${id}/${correctSlug}`);
+  }
+
+  const image =
+    data?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    data?.featured_image_url ||
+    "/no-image.png";
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-10">
+      <div className="grid md:grid-cols-3 gap-8">
+        <div className="relative h-[400px]">
+          <Image
+            src={image}
+            alt={data?.title?.rendered || "Pengurus"}
+            fill
+            className="object-cover rounded-xl"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <h1 className="text-4xl font-bold mb-6">
+            {data?.title?.rendered}
+          </h1>
+
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: data?.content?.rendered || "",
+            }}
+          />
+        </div>
+      </div>
+    </main>
+  );
+}

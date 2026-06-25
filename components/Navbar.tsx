@@ -32,19 +32,39 @@ const menus = [
         href: "/profil-mes/visimisi",
       },
       {
-        label: "Pengurus",
-        href: "/profil-mes/pengurus",
-      },
-      {
-        label: "Anggota",
-        href: "/profil-mes/anggota",
-      },
-      {
         label: "Legalitas",
         href: "/profil-mes/legalitas",
       },
     ],
   },
+
+{
+    label: "Pengurus",
+    href: "#",
+    submenu: [
+      {
+        label: "Dewan Pembina",
+        href: "/profil-mes/pengurus/pembina",
+      },
+  {
+        label: "Dewan Pakar",
+        href: "/profil-mes/pengurus/pakar",
+      },
+{
+        label: "Pengurus Harian",
+        href: "/profil-mes/pengurus/harian",
+      },
+{
+        label: "Departemen",
+        href: "/profil-mes/pengurus/departemen",
+      },
+{
+        label: "Manager Eksekutif",
+        href: "/profil-mes/pengurus/eksekutif",
+      },
+    ],
+  },
+
 
   {
     label: "Program",
