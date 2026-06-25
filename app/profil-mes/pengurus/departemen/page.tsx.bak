@@ -15,7 +15,7 @@ type Pengurus = {
 
 async function getPengurus(): Promise<Pengurus[]> {
   const res = await fetch(
-    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/departemen?_embed=1&per_page=100",
+    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pengurus?_embed=1&per_page=100",
     { cache: "no-store" }
   );
 
@@ -60,7 +60,7 @@ export default async function PengurusPage() {
 
       <section className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold">
-          Pengurus Departemen
+          Struktur Pengurus
         </h1>
         <p className="text-gray-500 mt-2">
           Masyarakat Ekonomi Syariah Jawa Barat
