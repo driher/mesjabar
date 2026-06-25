@@ -1,132 +1,302 @@
+
 import Link from "next/link";
 import Image from "next/image";
 
 type Pengurus = {
   id: number;
   slug: string;
-  jabatan_organisasi?: string;
-  kategori_organisasi?: string;
-  urutan?: string;
-  title?: { rendered?: string };
+
+  title?: {
+    rendered?: string;
+  };
+
+  acf?: {
+    jabatan?: string;
+    kategori?: string;
+    urutan?: string;
+  };
+
   _embedded?: {
-    ["wp:featuredmedia"]?: { source_url: string }[];
+    ["wp:featuredmedia"]?: {
+      source_url: string;
+    }[];
   };
 };
 
 async function getPengurus(): Promise<Pengurus[]> {
-  const res = await fetch(
-    "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/pembina?_embed=1&per_page=100",
-    { cache: "no-store" }
-  );
+  try {
+    const res = await fetch(
+      "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/dewan-pembina?_embed&per_page=100",
+      {
+        cache: "no-store",
+      }
+    );
 
-  if (!res.ok) return [];
+    if (!res.ok) {
+      return [];
+    }
 
-  const data = await res.json();
-  return Array.isArray(data) ? data : [];
+    const data = await res.json();
+
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 export default async function PengurusPage() {
   const data = await getPengurus();
 
-  // =========================
   // GROUP BY KATEGORI
-  // =========================
   const grouped = data.reduce<Record<string, Pengurus[]>>(
     (acc, item) => {
-      const kategori = item.kategori_organisasi?.trim() || "Pengurus";
+      const kategori =
+        item.acf?.kategori?.trim() || "Dewan Pembina";
 
       if (!acc[kategori]) {
         acc[kategori] = [];
       }
 
       acc[kategori].push(item);
+
       return acc;
     },
     {}
   );
 
-  // =========================
-  // SORT URUTAN
-  // =========================
+  // SORT BERDASARKAN URUTAN
   Object.keys(grouped).forEach((kategori) => {
     grouped[kategori].sort(
       (a, b) =>
-        Number(a.urutan || 9999) - Number(b.urutan || 9999)
+        Number(a.acf?.urutan || 9999) -
+        Number(b.acf?.urutan || 9999)
     );
   });
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-10">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
 
-      <section className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold">
-          Struktur Pembina
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Masyarakat Ekonomi Syariah Jawa Barat
-        </p>
+      {/* HERO */}
+      <section className="py-14 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+
+          <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+            Struktur Organisasi
+          </span>
+
+          <h1 className="mt-5 text-4xl md:text-5xl font-black text-gray-900">
+            Dewan Pembina
+          </h1>
+
+          <p className="mt-3 text-gray-500 max-w-2xl mx-auto">
+            Masyarakat Ekonomi Syariah Jawa Barat
+          </p>
+
+          <div className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white border shadow-sm">
+            <span className="text-3xl font-black text-green-600">
+              {data.length}
+            </span>
+            <span className="text-sm text-gray-500">
+              Total Pengurus
+            </span>
+          </div>
+
+        </div>
       </section>
 
-      <div className="space-y-12">
+      {/* CONTENT */}
+      <section className="max-w-7xl mx-auto px-4 pb-20">
 
-  {Object.keys(grouped)
-    .reverse()
-    .map((kategori) => (
-      <section key={kategori}>
+        <div className="space-y-14">
 
-        <h2 className="text-xl font-bold mb-6 border-l-4 border-green-600 pl-3">
-          {kategori}
-        </h2>
+          {Object.keys(grouped)
+            .sort()
+            .map((kategori) => (
+              <section key={kategori}>
 
+                {/* HEADER */}
+                <div className="mb-8 flex items-center gap-3">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="w-2 h-10 rounded-full bg-green-600"></div>
 
-              {grouped[kategori].map((item) => {
-                const image =
-                  item?._embedded?.["wp:featuredmedia"]?.[0]
-                    ?.source_url || "/no-image.png";
+                  <div>
 
-                return (
-                  <Link
-                    key={item.id}
-                    href={`/profil-mes/pengurus/${item.id}/${item.slug}`}
-                    className="group block bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition"
-                  >
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {kategori}
+                    </h2>
 
-                    <div className="py-3 px-4 text-center border-b bg-gray-50">
-                      <h4 className="font-black text-lg uppercase text-gray-900">
-                        {item.jabatan_organisasi || "Pengurus"}
-                      </h4>
-                    </div>
+                    <p className="text-sm text-gray-500">
+                      {grouped[kategori].length} Pengurus
+                    </p>
 
-                    <div className="relative w-full h-[260px] bg-gray-100">
-                      <Image
-                        src={image}
-                        alt={item.title?.rendered || "Pengurus"}
-                        fill
-                        className="object-cover group-hover:scale-105 transition"
-                      />
-                    </div>
+                  </div>
 
-                    <div className="p-4 text-center">
-                      <h3 className="font-semibold text-gray-800 text-lg group-hover:text-green-700">
-                        {item.title?.rendered}
-                      </h3>
+                </div>
 
-                      <span className="inline-block mt-4 text-xs bg-green-100 text-green-700 px-4 py-2 rounded-full">
-                        Lihat Profil
-                      </span>
-                    </div>
+                {/* GRID */}
+                <div
+                  className="
+                    grid
+                    grid-cols-2
+                    md:grid-cols-3
+                    lg:grid-cols-4
+                    xl:grid-cols-5
+                    2xl:grid-cols-6
+                    gap-5
+		    justify-items-center
+                  "
+                >
 
-                  </Link>
-                );
-              })}
+                  {grouped[kategori].map((item) => {
 
-            </div>
-          </section>
-        ))}
+                    const nama =
+                      item.title?.rendered || "Pengurus";
 
-      </div>
+                    const jabatan =
+                      item.acf?.jabatan || "Anggota";
+
+                    const image =
+                      item?._embedded?.["wp:featuredmedia"]?.[0]
+                        ?.source_url;
+
+                    return (
+                      <Link
+                        key={item.id}
+                        href={`/profil-mes/pengurus/${item.id}/${item.slug}`}
+                        className="
+                          group
+                          bg-white
+                          rounded-3xl
+                          border
+                          border-gray-100
+                          shadow-sm
+                          hover:shadow-xl
+                          hover:-translate-y-1
+                          transition-all
+                          duration-300
+                          overflow-hidden
+                        "
+                      >
+
+                        <div className="p-5">
+
+                          {/* FOTO / AVATAR */}
+                          <div className="flex justify-center">
+
+                            {image ? (
+                              <div className="relative w-24 h-24">
+
+                                <Image
+                                  src={image}
+                                  alt={nama}
+                                  fill
+                                  className="
+                                    object-cover
+                                    rounded-full
+                                    border-4
+                                    border-white
+                                    shadow-md
+                                    group-hover:scale-105
+                                    transition
+                                  "
+                                />
+
+                              </div>
+                            ) : (
+                              <div
+                                className="
+                                  w-24
+                                  h-24
+                                  rounded-full
+                                  bg-gradient-to-br
+                                  from-green-600
+                                  to-emerald-500
+                                  flex
+                                  items-center
+                                  justify-center
+                                  text-white
+                                  text-3xl
+                                  font-black
+                                  shadow-lg
+                                "
+                              >
+                                {nama.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+
+                          </div>
+
+                          {/* NAMA */}
+                          <div className="mt-4 text-center">
+
+                            <h3
+                              className="
+                                font-bold
+                                text-sm
+                                text-gray-900
+                                leading-tight
+                                min-h-[40px]
+                              "
+                            >
+                              {nama}
+                            </h3>
+
+                            <span
+                              className="
+                                inline-block
+                                mt-2
+                                px-3
+                                py-1
+                                rounded-full
+                                bg-green-100
+                                text-green-700
+                                text-xs
+                                font-semibold
+                              "
+                            >
+                              {jabatan}
+                            </span>
+
+                          </div>
+
+                          {/* BUTTON */}
+                          <div className="mt-4 flex justify-center">
+
+                            <span
+                              className="
+                                text-xs
+                                font-medium
+                                px-4
+                                py-2
+                                rounded-full
+                                bg-slate-100
+                                text-slate-600
+                                group-hover:bg-green-600
+                                group-hover:text-white
+                                transition
+                              "
+                            >
+                              Lihat Profil
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                      </Link>
+                    );
+                  })}
+
+                </div>
+
+              </section>
+            ))}
+
+        </div>
+
+      </section>
+
     </main>
   );
 }

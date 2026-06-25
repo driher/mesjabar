@@ -1,4 +1,4 @@
-```tsx
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -26,7 +26,7 @@ type Pengurus = {
 async function getPengurus(): Promise<Pengurus[]> {
   try {
     const res = await fetch(
-      "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/departemen?_embed&per_page=100",
+      "https://cms.ekonomisyariahjabar.id/wp-json/wp/v2/dewan-pakar?_embed&per_page=100",
       {
         cache: "no-store",
       }
@@ -52,7 +52,7 @@ export default async function PengurusPage() {
   const grouped = data.reduce<Record<string, Pengurus[]>>(
     (acc, item) => {
       const kategori =
-        item.acf?.kategori?.trim() || "Pengurus";
+        item.acf?.kategori?.trim() || "Dewan Pakar";
 
       if (!acc[kategori]) {
         acc[kategori] = [];
@@ -86,7 +86,7 @@ export default async function PengurusPage() {
           </span>
 
           <h1 className="mt-5 text-4xl md:text-5xl font-black text-gray-900">
-            Pengurus Departemen
+            Dewan Pakar
           </h1>
 
           <p className="mt-3 text-gray-500 max-w-2xl mx-auto">
@@ -299,4 +299,3 @@ export default async function PengurusPage() {
     </main>
   );
 }
-```

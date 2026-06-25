@@ -48,7 +48,7 @@ const menus = [
       },
   {
         label: "Dewan Pakar",
-        href: "/profil-mes/pengurus/pakar",
+        href: "/profil-mes/pengurus/dewan-pakar",
       },
 {
         label: "Pengurus Harian",
