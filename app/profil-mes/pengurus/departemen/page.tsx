@@ -162,7 +162,7 @@ export default async function PengurusPage() {
                     return (
                       <Link
                         key={item.id}
-                        href={`/profil-mes/pengurus/${item.id}/${item.slug}`}
+                        href={`/profil-mes/departemen/${item.id}/${item.slug}`}
                         className="
                           group
                           bg-white
