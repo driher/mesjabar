@@ -44,23 +44,23 @@ const menus = [
     submenu: [
       {
         label: "Dewan Pembina",
-        href: "/profil-mes/pengurus/pembina",
+        href: "/profil-mes/pembina",
       },
   {
         label: "Dewan Pakar",
-        href: "/profil-mes/pengurus/dewan-pakar",
+        href: "/profil-mes/dewan-pakar",
       },
 {
         label: "Pengurus Harian",
-        href: "/profil-mes/pengurus/harian",
+        href: "/profil-mes/harian",
       },
 {
         label: "Departemen",
-        href: "/profil-mes/pengurus/departemen",
+        href: "/profil-mes/departemen",
       },
 {
         label: "Manager Eksekutif",
-        href: "/profil-mes/pengurus/eksekutif",
+        href: "/profil-mes/eksekutif",
       },
     ],
   },

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
-import { getPengurusById } from "@/lib/pengurus";
+import { getPengurusById } from "@/lib/departemen";
 
 export default async function Page({
   params,
@@ -9,7 +9,7 @@ export default async function Page({
 }) {
   const { id, slug } = await params;
 
-  const data = await getPengurusById(id);
+  const data = await getDepartemenById(id);
 
   if (!data) {
     notFound();
@@ -22,7 +22,7 @@ export default async function Page({
       ?.replace(/\s+/g, "-");
 
   if (correctSlug && slug !== correctSlug) {
-    redirect(`/pengurus/${id}/${correctSlug}`);
+     redirect(`/departemen/${id}/${correctSlug}`);
   }
 
   const image =
