@@ -157,200 +157,201 @@ export default async function PengurusPage() {
         </div>
       </section>
 
-      {/* CONTENT */}
-      <section className="max-w-7xl mx-auto px-4 pb-20">
+     {/* CONTENT */}
+<section className="max-w-[1200px]  mx-auto px-4 pb-20">
 
-        <div className="space-y-14">
+  <div className="space-y-14">
 
-          {sortedKategori.map((kategori) => (
+    {sortedKategori.map((kategori) => (
 
-            <section key={kategori}>
+      <section key={kategori}>
 
-              {/* HEADER */}
-              <div className="mb-8 flex items-center gap-3">
+        {/* HEADER */}
+        <div className="mb-8 flex items-center gap-3">
 
-                <div className="w-2 h-10 rounded-full bg-green-600"></div>
+          <div className="w-2 h-10 rounded-full bg-green-600"></div>
 
-                <div>
+          <div>
 
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {kategori}
-                  </h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {kategori}
+            </h2>
 
-                  <p className="text-sm text-gray-500">
-                    {grouped[kategori].length} Pengurus
-                  </p>
+            <p className="text-sm text-gray-500">
+              {grouped[kategori].length} Pengurus
+            </p>
 
-                </div>
+          </div>
 
-              </div>
+        </div>
 
-              {/* GRID */}
-              <div
+        {/* GRID */}
+        <div
+          className="
+            grid
+            grid-cols-2
+            md:grid-cols-3
+            lg:grid-cols-4
+            xl:grid-cols-5
+            2xl:grid-cols-6
+            gap-5
+          "
+        >
+
+          {grouped[kategori].map((item) => {
+
+            const nama =
+              item.title?.rendered || "Pengurus";
+
+            const jabatan =
+              item.acf?.jabatan || "Anggota";
+
+            const image =
+              item?._embedded?.["wp:featuredmedia"]?.[0]
+                ?.source_url;
+
+            return (
+
+              <Link
+                key={item.id}
+                href={`/profil-mes/departemen/${item.id}/${item.slug}`}
                 className="
-                  grid
-                  grid-cols-2
-                  md:grid-cols-3
-                  lg:grid-cols-4
-                  xl:grid-cols-5
-                  2xl:grid-cols-6
-                  gap-5
+                  group
+                  bg-white
+                  rounded-3xl
+                  border
+                  border-gray-100
+                  shadow-sm
+                  hover:shadow-xl
+                  hover:-translate-y-1
+                  transition-all
+                  duration-300
+                  overflow-hidden
                 "
               >
 
-                {grouped[kategori].map((item) => {
+                <div className="p-5">
 
-                  const nama =
-                    item.title?.rendered || "Pengurus";
+                  {/* FOTO */}
+                  <div className="flex justify-center">
 
-                  const jabatan =
-                    item.acf?.jabatan || "Anggota";
+                    {image ? (
 
-                  const image =
-                    item?._embedded?.["wp:featuredmedia"]?.[0]
-                      ?.source_url;
+                      <div className="relative w-24 h-24">
 
-                  return (
-
-                    <Link
-                      key={item.id}
-                      href={`/profil-mes/departemen/${item.id}/${item.slug}`}
-                      className="
-                        group
-                        bg-white
-                        rounded-3xl
-                        border
-                        border-gray-100
-                        shadow-sm
-                        hover:shadow-xl
-                        hover:-translate-y-1
-                        transition-all
-                        duration-300
-                        overflow-hidden
-                      "
-                    >
-
-                      <div className="p-5">
-
-                        {/* FOTO */}
-                        <div className="flex justify-center">
-
-                          {image ? (
-
-                            <div className="relative w-24 h-24">
-
-                              <Image
-                                src={image}
-                                alt={nama}
-                                fill
-                                className="
-                                  object-cover
-                                  rounded-full
-                                  border-4
-                                  border-white
-                                  shadow-md
-                                  group-hover:scale-105
-                                  transition
-                                "
-                              />
-
-                            </div>
-
-                          ) : (
-
-                            <div
-                              className="
-                                w-24
-                                h-24
-                                rounded-full
-                                bg-gradient-to-br
-                                from-green-600
-                                to-emerald-500
-                                flex
-                                items-center
-                                justify-center
-                                text-white
-                                text-3xl
-                                font-black
-                                shadow-lg
-                              "
-                            >
-                              {nama.charAt(0).toUpperCase()}
-                            </div>
-
-                          )}
-
-                        </div>
-
-                        {/* NAMA */}
-                        <div className="mt-4 text-center">
-
-                          <h3
-                            className="
-                              font-bold
-                              text-sm
-                              text-gray-900
-                              leading-tight
-                              min-h-[40px]
-                            "
-                          >
-                            {nama}
-                          </h3>
-
-                          <span
-                            className="
-                              inline-block
-                              mt-2
-                              px-3
-                              py-1
-                              rounded-full
-                              bg-green-100
-                              text-green-700
-                              text-xs
-                              font-semibold
-                            "
-                          >
-                            {jabatan}
-                          </span>
-
-                        </div>
-			                        {/* BUTTON */}
-                        <div className="mt-4 flex justify-center">
-
-                          <span
-                            className="
-                              text-xs
-                              font-medium
-                              px-4
-                              py-2
-                              rounded-full
-                              bg-slate-100
-                              text-slate-600
-                              group-hover:bg-green-600
-                              group-hover:text-white
-                              transition
-                            "
-                          >
-                            Lihat Profil
-                          </span>
-
-                        </div>
+                        <Image
+                          src={image}
+                          alt={nama}
+                          fill
+                          className="
+                            object-cover
+                            rounded-full
+                            border-4
+                            border-white
+                            shadow-md
+                            group-hover:scale-105
+                            transition
+                          "
+                        />
 
                       </div>
 
-                    </Link>
+                    ) : (
 
-                  );
+                      <div
+                        className="
+                          w-24
+                          h-24
+                          rounded-full
+                          bg-gradient-to-br
+                          from-green-600
+                          to-emerald-500
+                          flex
+                          items-center
+                          justify-center
+                          text-white
+                          text-3xl
+                          font-black
+                          shadow-lg
+                        "
+                      >
+                        {nama.charAt(0).toUpperCase()}
+                      </div>
 
-                })}
+                    )}
 
-              </div>
+                  </div>
 
-            </section>
+                  {/* NAMA */}
+                  <div className="mt-4 text-center">
 
-          ))}
+                    <h3
+                      className="
+                        font-bold
+                        text-sm
+                        text-gray-900
+                        leading-tight
+                        min-h-[42px]
+                      "
+                    >
+                      {nama}
+                    </h3>
+
+                    <span
+                      className="
+                        inline-block
+                        mt-2
+                        px-3
+                        py-1
+                        rounded-full
+                        bg-green-100
+                        text-green-700
+                        text-xs
+                        font-semibold
+                      "
+                    >
+                      {jabatan}
+                    </span>
+
+                  </div>
+
+                  {/* BUTTON */}
+                  <div className="mt-4 flex justify-center">
+
+                    <span
+                      className="
+                        text-xs
+                        font-medium
+                        px-4
+                        py-2
+                        rounded-full
+                        bg-slate-100
+                        text-slate-600
+                        group-hover:bg-green-600
+                        group-hover:text-white
+                        transition
+                      "
+                    >
+                      Lihat Profil
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </Link>
+
+            );
+
+          })}
 
         </div>
+
+      </section>
+
+    ))}
+
+     </div>
 
       </section>
 

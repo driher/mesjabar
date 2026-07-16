@@ -72,9 +72,10 @@ export default async function PengurusPage() {
   // PRIORITAS KATEGORI
   const prioritas = [
     "Pengurus Harian",
+    "Ketua Bidang",
     "Sekretaris Bidang",
     "Bendahara",
-    "Ketua Bidang",
+    
   ];
 
   const sortedKategori = Object.keys(grouped).sort(
