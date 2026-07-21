@@ -25,23 +25,28 @@ const programs = [
     title: "Akademi Ekonomi Syariah",
     desc: "Pengembangan SDM unggul di bidang ekonomi syariah",
     color: "bg-green-100 text-green-700",
+    link: "/akademi-ekonomi-syariah",
   },
   {
     title: "Pendamping Halal",
     desc: "Pendampingan sertifikasi halal untuk UMKM dan industri",
     color: "bg-yellow-100 text-yellow-700",
+    link: "/pendamping-halal",
   },
   {
     title: "Koperasi Syariah",
     desc: "Koperasi modern berbasis syariah",
     color: "bg-blue-100 text-blue-700",
+    link: "/koperasi-syariah",
   },
   {
     title: "Donasi & ZISWAF",
     desc: "Pemberdayaan ekonomi umat",
     color: "bg-violet-100 text-violet-700",
+    link: "/donasi",
   },
 ];
+
 
 const partners = [
   {
@@ -146,23 +151,33 @@ export default function HomePage() {
             </div>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               {programs.map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-3xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div
-                    className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${item.color}`}
-                  >
-                    <GraduationCap className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-500">
-                    {item.desc}
-                  </p>
-                </article>
-              ))}
+  <Link
+    key={item.title}
+    href={item.link}
+    className="group rounded-3xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl block"
+  >
+    <div
+      className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl ${item.color} transition group-hover:scale-110`}
+    >
+      <GraduationCap className="h-6 w-6" />
+    </div>
+
+    <h3 className="text-lg font-bold text-slate-900 group-hover:text-green-700 transition">
+      {item.title}
+    </h3>
+
+    <p className="mt-3 text-sm leading-7 text-slate-500">
+      {item.desc}
+    </p>
+
+    <div className="mt-5 flex items-center text-sm font-semibold text-green-700">
+      Selengkapnya
+      <span className="ml-2 transition-transform group-hover:translate-x-1">
+        →
+      </span>
+    </div>
+  </Link>
+))}
             </div>
           </div>
 

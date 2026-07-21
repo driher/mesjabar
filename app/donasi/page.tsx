@@ -1,0 +1,134 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
+
+type Lembaga = {
+  nama: string;
+  logo: string;
+  url: string;
+};
+
+export default function DonasiPage() {
+  const [selected, setSelected] = useState<Lembaga | null>(null);
+
+  const lembaga = [
+    {
+      nama: "Rumah Zakat",
+      logo: "/images/donasi/rumah-zakat.png",
+      url: "https://www.rumahzakat.org/home/mes-jawa-barat",
+    },
+    {
+      nama: "Rumah Wakaf",
+      logo: "/images/donasi/rumah-wakaf.png",
+      url: "https://rumahwakaf.org/wakaf/wakafproduktif-mesjabar",
+    },
+    {
+      nama: "BAZNAS",
+      logo: "/images/donasi/baznas.png",
+      url: "#",
+    },
+  ];
+
+  const lanjutkan = () => {
+    if (!selected) return;
+
+    if (selected.url !== "#") {
+      window.open(selected.url, "_blank");
+    }
+
+    setSelected(null);
+  };
+
+  return (
+    <>
+      <main className="bg-gray-50 min-h-screen py-16">
+        <div className="max-w-5xl mx-auto px-6">
+
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-green-700">
+              Donasi & ZISWAF
+            </h1>
+
+            <p className="text-lg text-gray-600 mt-3">
+              di bawah MES Jawa Barat
+            </p>
+
+            <p className="mt-8 text-xl font-semibold text-gray-800">
+              Silakan pilih lembaga:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            {lembaga.map((item) => (
+              <button
+                key={item.nama}
+                onClick={() => setSelected(item)}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 border hover:border-green-500 p-8"
+              >
+                <div className="flex justify-center">
+                  <Image
+                    src={item.logo}
+                    alt={item.nama}
+                    width={170}
+                    height={170}
+                    className="object-contain h-32"
+                  />
+                </div>
+               
+              </button>
+            ))}
+
+          </div>
+        </div>
+      </main>
+
+      {/* Popup */}
+
+      {selected && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
+
+          <div className="bg-white rounded-2xl max-w-md w-full p-8">
+
+            <h2 className="text-2xl font-bold text-center text-green-700">
+              {selected.nama}
+            </h2>
+
+            <p className="text-gray-600 text-center mt-4">
+              Anda akan diarahkan ke halaman resmi
+              <br />
+              <strong>{selected.nama}</strong>.
+            </p>
+
+            {selected.url === "#" && (
+              <p className="text-red-500 text-center mt-4">
+                Halaman donasi masih dalam proses.
+              </p>
+            )}
+
+            <div className="flex gap-4 mt-8">
+
+              <button
+                onClick={() => setSelected(null)}
+                className="flex-1 py-3 rounded-lg border border-gray-300 hover:bg-gray-100"
+              >
+                Batal
+              </button>
+
+              <button
+                onClick={lanjutkan}
+                className="flex-1 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700"
+              >
+                Lanjutkan
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+    </>
+  );
+}
