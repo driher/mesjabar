@@ -17,7 +17,7 @@ export default function DonasiPage() {
     {
       nama: "BAZNAS",
       logo: "/images/donasi/baznas.png",
-      url: "#",
+      url: "https://baznasjabar.org/infak?fr=MESJabar",
     },
     {
       nama: "Rumah Zakat",
