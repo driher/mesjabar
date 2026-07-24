@@ -13,12 +13,6 @@ export default function DonasiPage() {
   const [selected, setSelected] = useState<Lembaga | null>(null);
 
   const lembaga = [
-    
-    {
-      nama: "BAZNAS",
-      logo: "/images/donasi/baznas.png",
-      url: "#",
-    },
     {
       nama: "Rumah Zakat",
       logo: "/images/donasi/rumah-zakat.png",
@@ -29,7 +23,12 @@ export default function DonasiPage() {
       logo: "/images/donasi/rumah-wakaf.png",
       url: "https://rumahwakaf.org/wakaf/wakafproduktif-mesjabar",
     },
-    ];
+    {
+      nama: "BAZNAS",
+      logo: "/images/donasi/baznas.png",
+      url: "#",
+    },
+  ];
 
   const lanjutkan = () => {
     if (!selected) return;
